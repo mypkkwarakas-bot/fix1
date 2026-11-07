@@ -231,14 +231,7 @@ button{font:inherit;border:0;background:none;cursor:pointer;color:inherit}
 #inbox .none{padding:12rem 3rem 0;text-align:center;font-size:1.4rem;line-height:2.1rem;color:#8a8a8a}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
-
-<link rel="manifest" href="./manifest.webmanifest">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="OVO">
-<link rel="apple-touch-icon" href="./icons/icon-192.png">
-\n</head>
+</head>
 <body>
 <div class="app">
  <div class="wrap">
@@ -256,7 +249,7 @@ button{font:inherit;border:0;background:none;cursor:pointer;color:inherit}
       <button id="eye" aria-label="Sembunyikan saldo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="2.8"/><path d="M4 20L20 4"/></svg></button>
     </div>
     <div class="row">
-      <div class="amount"><small>Rp</small><span id="amt">9.320</span></div>
+      <div class="amount"><small>Rp</small><span id="amt">…</span></div>
       <button class="pts" data-toast="187 Points"><i>P</i><span>187 Points</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
     </div>
@@ -423,8 +416,9 @@ button{font:inherit;border:0;background:none;cursor:pointer;color:inherit}
   document.addEventListener('click',function(e){
     var t=e.target.closest('[data-toast]');if(t)say(t.getAttribute('data-toast'));
   });
-  var hidden=false,amt=document.getElementById('amt');
-  document.getElementById('eye').onclick=function(){hidden=!hidden;amt.textContent=hidden?'••••':'9.320'};
+  var hidden=false,amt=document.getElementById('amt'),saldoTxt='…';
+  window.setSaldoO=function(t){saldoTxt=t;amt.textContent=hidden?'••••':saldoTxt};
+  document.getElementById('eye').onclick=function(){hidden=!hidden;amt.textContent=hidden?'••••':saldoTxt};
   Array.prototype.forEach.call(document.querySelectorAll('.go'),function(g){
     g.onclick=function(){g.parentNode.classList.add('ok');g.textContent='Diproses…';say('Verifikasi dimulai')};
   });
@@ -783,15 +777,34 @@ if(location.hash==='#history')openHist(true);
   paint();
 })();
 </script>
-
 <script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function () {
-    navigator.serviceWorker.register('./sw.js').catch(function(err) {
-      console.error('Service worker registration failed:', err);
-    });
-  });
-}
+/* Saldo header = tabel "O" (id=1, kolom amount_rupiah) — dibaca langsung seperti tabel "A": REST + realtime + polling */
+(function(){
+  var URL_='https://jtdnsrsollmknfijdqty.supabase.co',KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp0ZG5zcnNvbGxta25maWpkcXR5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0OTIxMDAsImV4cCI6MjEwODA2ODEwMH0.snpF-wdt0XhwodmfQuW7J-uaG9GV-Q0fDJVoxJImcNE';
+  var fmt=function(n){return String(Math.round(Number(n)||0)).replace(/\B(?=(\d{3})+(?!\d))/g,'.')};
+  function show(v){if(v!=null&&window.setSaldoO)window.setSaldoO(fmt(v))}
+  function load(){
+    fetch(URL_+'/rest/v1/O?select=amount_rupiah&order=id.asc&limit=1',{headers:{apikey:KEY,Authorization:'Bearer '+KEY},cache:'no-store'})
+      .then(function(r){return r.ok?r.json():Promise.reject(r.status)})
+      .then(function(d){if(d&&d[0])show(d[0].amount_rupiah)})
+      .catch(function(){});
+  }
+  load();
+  setInterval(function(){if(!document.hidden)load()},5000);
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)load()});
+  window.addEventListener('focus',load);
+  window.addEventListener('pageshow',load);
+  /* realtime (opsional; polling tetap jadi cadangan) */
+  var sc=document.createElement('script');
+  sc.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js';
+  sc.onload=function(){try{
+    var c=window.supabase.createClient(URL_,KEY);
+    c.channel('saldo-o').on('postgres_changes',{event:'*',schema:'public',table:'O'},function(p){
+      if(p.new&&p.new.amount_rupiah!=null)show(p.new.amount_rupiah);else load();
+    }).subscribe();
+  }catch(e){}};
+  document.head.appendChild(sc);
+})();
 </script>
-\n</body>
+</body>
 </html>

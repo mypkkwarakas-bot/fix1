@@ -1,4 +1,4 @@
-const CACHE = 'ovo-beranda-pwa-v2';
+const CACHE = 'ovo-beranda-pwa-v3';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-192.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(CORE)).then(() => self.skipWaiting()));
@@ -20,4 +20,30 @@ self.addEventListener('fetch', event => {
     }
     return res;
   }).catch(() => caches.match('./index.html'))));
+});
+
+self.addEventListener('push', event => {
+  let d = {};
+  try { d = event.data ? event.data.json() : {}; } catch (e) { d = { body: event.data ? event.data.text() : '' }; }
+  const title = d.title || 'OVO';
+  const opts = {
+    body: d.body || '',
+    tag: d.tag || undefined,
+    icon: d.icon || './icons/icon-192.png',
+    badge: d.badge || './icons/icon-192.png',
+    data: { url: d.url || './' },
+    renotify: !!d.tag
+  };
+  event.waitUntil(self.registration.showNotification(title, opts));
+});
+self.addEventListener('notificationclick', event => {
+  event.notification.close();
+  const target = new URL('./', self.registration.scope).href;
+  event.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
+    for (const c of list) { if (c.url.startsWith(target) && 'focus' in c) return c.focus(); }
+    return self.clients.openWindow(target);
+  }));
+});
+self.addEventListener('pushsubscriptionchange', event => {
+  event.waitUntil(self.registration.pushManager.getSubscription().then(() => self.clients.matchAll().then(l => l.forEach(c => c.postMessage({ type: 'resubscribe' })))));
 });

@@ -812,6 +812,44 @@ if(location.hash==='#history')openHist(true);
   document.head.appendChild(sc);
 })();
 </script>
-<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js').catch(function(){})})}</script>
+<script>
+/* PWA: service worker + push notifikasi Ox (langganan disimpan ke push_sub lewat RPC push_daftar_public) */
+(function(){
+  var URL_='https://jtdnsrsollmknfijdqty.supabase.co',KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp0ZG5zcnNvbGxta25maWpkcXR5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0OTIxMDAsImV4cCI6MjEwODA2ODEwMH0.snpF-wdt0XhwodmfQuW7J-uaG9GV-Q0fDJVoxJImcNE';
+  var VAPID='BP8PSj4XhGxYKyzBuA-ZhlYvJb4zm7IdSG8of3Cnm3JURtGg3EyD-hbHJL7EZqsbllT6-OxysMXoTVDV9_x4UFc';
+  if(!('serviceWorker' in navigator))return;
+  var reg=null;
+  function u8(b){var p='='.repeat((4-b.length%4)%4),s=(b+p).replace(/-/g,'+').replace(/_/g,'/'),r=atob(s),o=new Uint8Array(r.length);for(var i=0;i<r.length;i++)o[i]=r.charCodeAt(i);return o}
+  function b64(buf){var a=new Uint8Array(buf),s='';for(var i=0;i<a.length;i++)s+=String.fromCharCode(a[i]);return btoa(s)}
+  function simpan(sub){
+    var k=sub.getKey?sub.getKey('p256dh'):null,a=sub.getKey?sub.getKey('auth'):null;
+    if(!k||!a)return;
+    var j=sub.toJSON&&sub.toJSON().keys;
+    var p256=j&&j.p256dh?j.p256dh:b64(k).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+    var au=j&&j.auth?j.auth:b64(a).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+    fetch(URL_+'/rest/v1/rpc/push_daftar_public',{method:'POST',headers:{apikey:KEY,Authorization:'Bearer '+KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({p_endpoint:sub.endpoint,p_p256dh:p256,p_auth:au})}).catch(function(){});
+  }
+  function langganan(){
+    if(!reg||!('PushManager' in window)||!('Notification' in window)||Notification.permission!=='granted')return;
+    reg.pushManager.getSubscription().then(function(s){
+      return s||reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:u8(VAPID)});
+    }).then(function(s){if(s)simpan(s)}).catch(function(){});
+  }
+  function minta(){
+    if(!('Notification' in window)||!('PushManager' in window))return;
+    if(Notification.permission==='default'){
+      try{Notification.requestPermission().then(langganan)}catch(e){Notification.requestPermission(langganan)}
+    }
+  }
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('./sw.js').then(function(r){reg=r;return navigator.serviceWorker.ready}).then(function(r){reg=r;langganan()}).catch(function(){});
+  });
+  navigator.serviceWorker.addEventListener('message',function(e){if(e.data&&e.data.type==='resubscribe')langganan()});
+  /* izin notifikasi harus dipicu gestur pengguna (wajib di iOS): minta pada sentuhan pertama */
+  document.addEventListener('click',function f(){document.removeEventListener('click',f);minta()},{once:true});
+  window.aktifkanNotifikasi=minta;
+})();
+</script>
 </body>
 </html>

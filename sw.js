@@ -1,5 +1,5 @@
-const CACHE = 'ovo-beranda-pwa-v3';
-const CORE = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-192.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png'];
+const CACHE = 'ovo-beranda-pwa-v4';
+const CORE = ['./', './index.html', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-192.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png', './icons/badge-96.png'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(CORE)).then(() => self.skipWaiting()));
 });
@@ -26,12 +26,13 @@ self.addEventListener('push', event => {
   let d = {};
   try { d = event.data ? event.data.json() : {}; } catch (e) { d = { body: event.data ? event.data.text() : '' }; }
   const title = d.title || 'OVO';
+  /* Tampilan disamakan dengan notifikasi native OVO: hanya ikon kecil (badge monokrom), judul, dan isi.
+     Tanpa ikon besar di kanan (icon) dan tanpa gambar. */
   const opts = {
     body: d.body || '',
     tag: d.tag || undefined,
-    icon: d.icon || './icons/icon-192.png',
-    badge: d.badge || './icons/icon-192.png',
-    data: { url: d.url || './' },
+    badge: './icons/badge-96.png',
+    data: { url: './' },
     renotify: !!d.tag
   };
   event.waitUntil(self.registration.showNotification(title, opts));

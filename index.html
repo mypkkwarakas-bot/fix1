@@ -182,6 +182,33 @@ button{font:inherit;border:0;background:none;cursor:pointer;color:inherit}
 #prof .ver b{font-weight:600;color:#555}
 #prof .so{display:block;width:100%;height:4.5rem;margin-top:1.6rem;border-radius:2.25rem;background:#5a28d8;color:#fff;font-weight:800;font-size:1.8rem}
 #prof .so:active{background:#4a1fb8}
+#prof .ep{position:absolute;inset:0;z-index:4;background:#fff;display:none;flex-direction:column;color:#1a1a1a}
+#prof .ep.on{display:flex}
+#prof .eh{flex:none;display:flex;align-items:center;gap:1.8rem;height:calc(5.2rem + env(safe-area-inset-top,0px));padding:env(safe-area-inset-top,0px) 1.5rem 0;font-weight:800;font-size:1.6rem;background:#fff}
+#prof .eh button{display:grid;place-items:center;width:3.2rem;height:3.2rem;margin-left:-.6rem}
+#prof .eh svg{width:2.2rem;height:2.2rem;stroke:#1a1a1a;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+#prof .eb{flex:1;overflow-y:auto;scrollbar-width:none}
+#prof .eb::-webkit-scrollbar{display:none}
+#prof .eh2{position:relative;height:12rem;background:linear-gradient(180deg,#fff 0%,#f6f1ff 100%);overflow:hidden}
+#prof .eh2::before,#prof .eh2::after{content:"";position:absolute;bottom:-3rem;width:60%;height:8rem;border-radius:50%;background:rgba(160,120,240,.10)}
+#prof .eh2::before{left:-20%}#prof .eh2::after{right:-20%}
+#prof .eav{position:absolute;left:50%;top:1rem;transform:translateX(-50%);width:7.4rem;height:7.4rem;border-radius:50%;background:#e4d8fb;display:grid;place-items:center;overflow:hidden}
+#prof .eav svg{width:4.2rem;height:4.2rem}
+#prof .ecard{position:relative;margin-top:-2.4rem;background:#fff;border-radius:1.6rem 1.6rem 0 0;padding:1.6rem 1.5rem 2.2rem}
+#prof .el{font-size:1.2rem;color:#6b6b6b;font-weight:500}
+#prof .ein{display:block;width:100%;height:4.4rem;margin-top:1rem;padding:0 1.4rem;border:.1rem solid transparent;border-radius:1rem;background:#f4f4f4;font:inherit;font-size:1.4rem;font-weight:500;color:#1a1a1a;outline:0;-webkit-user-select:text;user-select:text}
+#prof .ein:focus{border-color:#5a28d8;background:#fff}
+#prof .eer{display:block;min-height:.4rem;margin-top:.4rem;font-size:1.15rem;color:#e0243c;font-weight:600}
+#prof .esep{height:.8rem;background:#f5f5f5}
+#prof .erow{display:flex;align-items:center;margin:0 1.5rem;padding:1.5rem 0 1.4rem;border-bottom:.1rem solid #e6e6e6}
+#prof .erow:last-child{border-bottom:0}
+#prof .erow>div{flex:1;min-width:0}
+#prof .erow b{display:block;margin-top:.5rem;font-size:1.45rem;line-height:2rem;font-weight:800;overflow:hidden;text-overflow:ellipsis}
+#prof .erow button{flex:none;font-weight:800;font-size:1.2rem;color:#1a67d2;padding:1rem 0 1rem 1.2rem}
+#prof .efoot{flex:none;padding:1.4rem 1.5rem calc(1.4rem + env(safe-area-inset-bottom,0px));box-shadow:0 -.2rem .8rem rgba(0,0,0,.05);background:#fff}
+body.ep-open .nav{display:none!important}
+#prof .esave{display:block;width:100%;height:4.5rem;border-radius:2.25rem;background:#5a28d8;color:#fff;font-weight:800;font-size:1.5rem}
+#prof .esave:disabled{background:#f4f4f4;color:#b5b5b9}
 #prof .sbg{position:absolute;inset:0;z-index:5;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
 #prof .sbg.on{opacity:1;pointer-events:auto}
 #prof .sh{width:100%;background:#fff;border-radius:1.6rem 1.6rem 0 0;padding:1.2rem 1.5rem calc(2rem + env(safe-area-inset-bottom,0px));transform:translateY(100%);transition:transform .25s}
@@ -220,6 +247,76 @@ button{font:inherit;border:0;background:none;cursor:pointer;color:inherit}
 #loyo .lh{margin-top:2.6rem;font-size:1.35rem;line-height:2rem;font-weight:400}
 #loyo .lch{display:block;margin:.6rem auto 0;width:1.6rem;height:1.6rem;stroke:#1a1a1a;stroke-width:2.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
 
+
+/* ===== Halaman detail Top Up Berhasil (overlay, di-scope ke #tdet) ===== */
+#tdet{--green:#00b14f;--check:#00c472;--purple:#5827d8;--ink:#1a1a1a;--muted:#575757;--faint:#a3a3a3;--sep:#f1f1f1;--band:#f5f5f5;--icon:#594d75;--dash:#d1d1d1;
+ position:fixed;top:0;bottom:0;left:0;right:0;margin:0 auto;width:100%;max-width:480px;z-index:60;background:#fff;color:var(--ink);display:none;flex-direction:column;overflow:hidden;font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-size:14px;line-height:normal;text-align:left;-webkit-user-select:none;user-select:none}
+#tdet.on{display:flex}
+#tdet *{box-sizing:border-box;margin:0;padding:0;letter-spacing:normal;-webkit-tap-highlight-color:transparent}
+#tdet button{font-family:inherit;background:none;border:0;color:inherit;cursor:pointer}
+#tdet .fit{display:inline-block;white-space:nowrap}
+#tdet .td-h{position:absolute;top:0;left:0;right:0;z-index:5;height:calc(52.5px + env(safe-area-inset-top,0px));padding-top:env(safe-area-inset-top,0px);display:flex;align-items:center;justify-content:center;background:transparent}
+#tdet.scrolled .td-h{background:#fff}
+#tdet .td-x{position:absolute;left:13px;top:calc(13px + env(safe-area-inset-top,0px));width:26px;height:26px;display:grid;place-items:center}
+#tdet .td-x svg{width:14px;height:14px;stroke:var(--icon);stroke-width:2.1;stroke-linecap:round;fill:none}
+#tdet .td-chk{position:relative;width:26px;height:26px;display:grid;place-items:center}
+#tdet .td-chk::before,#tdet .td-chk::after{content:"";position:absolute;left:50%;top:50%;border-radius:50%}
+#tdet .td-chk::before{width:36px;height:36px;margin:-18px 0 0 -18px;background:#e1faf1;animation:tdhalo 1.8s ease-in-out infinite alternate}
+#tdet .td-chk::after{width:26px;height:26px;margin:-13px 0 0 -13px;background:var(--check);animation:tdchk 1.8s ease-in-out infinite alternate}
+@keyframes tdhalo{from{transform:scale(1);background:#e1faf1}to{transform:scale(1.333);background:#f8fefc}}
+@keyframes tdchk{from{transform:scale(1)}to{transform:scale(.923)}}
+#tdet .td-chk svg{position:relative;z-index:2;width:14px;height:14px;stroke:#fff;stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+#tdet .td-m{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding-bottom:14.5px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+#tdet .td-m::-webkit-scrollbar{display:none}
+#tdet .td-status{margin-top:calc(51px + env(safe-area-inset-top,0px));height:24px;line-height:24px;text-align:center;font-size:16px;font-weight:700;color:var(--green)}
+#tdet .td-amount{height:46px;line-height:46px;text-align:center;font-size:34px;font-weight:800;color:var(--ink)}
+#tdet .td-bank{position:relative;margin:43px 17.5px 0;height:87px;padding-top:34px;background:#fff;border-radius:8px;box-shadow:0 1px 6px rgba(0,0,0,.06);text-align:center}
+#tdet .td-logo{position:absolute;left:50%;top:-24.75px;transform:translateX(-50%);width:53.5px;height:53.5px;border-radius:50%;background:#fff;box-shadow:0 1px 6px rgba(0,0,0,.08);display:grid;place-items:center}
+#tdet .td-logo img{width:38px;height:auto;display:block;transform:translateY(-2px)}
+#tdet .td-name{height:22px;line-height:22px;font-size:16px;font-weight:700}
+#tdet .td-dbtn{margin-top:16px;width:100%;height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 17.5px 0 15px;font-size:17px;font-weight:700;color:var(--ink);text-align:left}
+#tdet .td-dbtn svg{width:13px;height:13px;stroke:var(--icon);stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round;transition:transform .25s;margin-right:5px}
+#tdet.exp .td-dbtn svg{transform:rotate(180deg)}
+#tdet .td-panel{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease}
+#tdet.exp .td-panel{grid-template-rows:1fr}
+#tdet .td-panel>div{overflow:hidden}
+#tdet .td-rows{padding:6.25px 15px 0}
+#tdet .td-r{display:flex;justify-content:space-between;align-items:center;height:30.5px;font-size:14px}
+#tdet .td-r .l{color:var(--muted);font-weight:500}
+#tdet .td-r .v{font-weight:500;color:var(--ink);text-align:right}
+#tdet .td-r.line{border-bottom:1px solid var(--sep);height:31px}
+#tdet .td-r.last{height:31px;position:relative}
+#tdet .td-r.last::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:repeating-linear-gradient(90deg,var(--dash) 0 7px,transparent 7px 11px)}
+#tdet .td-r.total .l,#tdet .td-r.total .v{color:var(--ink);font-weight:700}
+#tdet .td-ref{display:flex;align-items:center;gap:2px;min-width:0}
+#tdet .td-ref .txt{display:block;width:131px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500;font-size:11px;text-align:right}
+#tdet .td-copy{flex:none;width:24px;height:24px;display:grid;place-items:center;margin-right:-1px}
+#tdet .td-copy svg{width:18px;height:18px}
+#tdet .td-legal{padding:15.25px 15px 21.25px;font-size:12px;line-height:17.5px;color:var(--faint);font-weight:400;white-space:nowrap}
+#tdet .td-band{height:7.5px;background:var(--band);margin-top:5.5px}
+#tdet.exp .td-band{margin-top:0}
+#tdet .td-help{display:flex;align-items:center;gap:15px;height:70px;padding:0 15px;width:100%;background:#fff;text-align:left}
+#tdet .td-help img{width:30px;height:30px;flex:none;display:block}
+#tdet .td-help .t{flex:1;display:block}
+#tdet .td-help b{display:block;height:20px;line-height:20px;font-size:14px;font-weight:700;color:var(--ink)}
+#tdet .td-help small{display:block;height:20px;line-height:20px;font-size:13px;color:var(--muted);font-weight:400}
+#tdet .td-help svg{width:9px;height:14px;stroke:var(--icon);stroke-width:2.3;fill:none;stroke-linecap:round;stroke-linejoin:round;margin-right:4px}
+#tdet .td-f{position:relative;flex:none;padding:15px 15px calc(14.5px + env(safe-area-inset-bottom,0px));background:#fff}
+#tdet .td-f::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:13px;background:linear-gradient(to bottom,rgba(0,0,0,0),rgba(0,0,0,.068));pointer-events:none}
+#tdet .td-cta{width:100%;height:45px;border-radius:23px;background:var(--purple);color:#fff;font-size:16px;font-weight:700;transition:transform .1s,filter .15s}
+#tdet .td-cta:active{transform:scale(.98);filter:brightness(.92)}
+#tdet .td-toast{position:absolute;left:50%;bottom:90px;transform:translate(-50%,10px);background:#1a1a1a;color:#fff;font-size:13px;padding:8px 14px;border-radius:18px;opacity:0;pointer-events:none;transition:.2s;z-index:9;white-space:nowrap}
+#tdet .td-toast.show{opacity:1;transform:translate(-50%,0)}
+#tdet.loading .td-m>*:not(.td-state){visibility:hidden}
+#tdet .td-state{padding:140px 32px 0;text-align:center;font-size:14px;line-height:21px;color:var(--muted)}
+#tdet .td-state[hidden]{display:none}
+#tdet .td-retry{margin-top:16px;height:40px;padding:0 24px;border-radius:20px;background:var(--purple);color:#fff;font-size:14px;font-weight:700}
+#tdet.failed .td-m>*:not(.td-state){display:none}
+#tdet.failed .td-chk{background:#c9c9ce;border-radius:50%}
+#tdet.failed .td-chk::before,#tdet.failed .td-chk::after{display:none}
+#tdet button:focus-visible{outline:2px solid var(--purple);outline-offset:2px}
+#inbox .ni[data-kode]{cursor:pointer}
+@media (prefers-reduced-motion:reduce){#tdet *{transition:none!important;animation:none!important}}
 /* ===== Tab Inbox ===== */
 .nav .bf{fill:#8c8c91}.nav button.on .bf{fill:#6d3ae0}
 #inbox{position:absolute;inset:0;z-index:10;background:#fff;display:none;flex-direction:column;color:#1a1a1a}
@@ -320,6 +417,52 @@ button{font:inherit;border:0;background:none;cursor:pointer;color:inherit}
   <main id="hist-list"></main>
  </div>
 
+
+ <div id="tdet" role="dialog" aria-label="Detail Top Up" aria-hidden="true" class="loading">
+  <header class="td-h">
+    <button class="td-x" id="td-x" aria-label="Tutup"><svg viewBox="0 0 14 14"><path d="M1.5 1.5l11 11M12.5 1.5l-11 11"/></svg></button>
+    <div class="td-chk"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+  </header>
+  <main class="td-m" id="td-scroll">
+    <div class="td-state" id="td-state" hidden><p id="td-msg"></p><button class="td-retry" id="td-retry">Coba lagi</button></div>
+    <p class="td-status"><span class="fit" id="td-status" data-w="115.3" data-g="status">Top Up Berhasil</span></p>
+    <h1 class="td-amount"><span class="fit" id="td-amount" data-w="160.8" data-g="amount">Rp605.000</span></h1>
+    <section class="td-bank">
+      <div class="td-logo"><img id="td-logo" src="data:image/png;base64,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" alt=""></div>
+      <p class="td-name"><span class="fit" id="td-bank" data-w="102.3" data-g="bank">Bank Permata</span></p>
+    </section>
+    <section id="td-detail">
+      <button class="td-dbtn" id="td-toggle" aria-expanded="false" aria-controls="td-panel">
+        <span class="fit" data-w="116.3" data-g="detail">Detail Transaksi</span>
+        <svg viewBox="0 0 12 12"><path d="M1.5 4l4.5 4.5L10.5 4"/></svg>
+      </button>
+      <div class="td-panel" id="td-panel"><div>
+        <div class="td-rows">
+          <div class="td-r"><span class="l fit" id="td-judul" data-w="126.3" data-g="lbl">Masuk ke OVO Cash</span><span class="v fit" id="td-masuk" data-w="67.8" data-g="val">Rp603.000</span></div>
+          <div class="td-r"><span class="l fit" data-w="49.8" data-g="lbl">Tanggal</span><span class="v fit" id="td-tanggal" data-w="79.8" data-g="val">20 Sep 2026</span></div>
+          <div class="td-r"><span class="l fit" data-w="39.3" data-g="lbl">Waktu</span><span class="v fit" id="td-waktu" data-w="36.8" data-g="val">00:40</span></div>
+          <div class="td-r line"><span class="l fit" data-w="81.8" data-g="lbl">No. Referensi</span>
+            <span class="v td-ref"><span class="txt" id="td-ref" data-full="">-</span>
+              <button class="td-copy" id="td-copy" aria-label="Salin nomor referensi"><svg viewBox="0 0 24 24"><rect x="2.5" y="8" width="13.5" height="13.5" rx="3.5" fill="#1a1a1a"/><path d="M8 5.5A2.5 2.5 0 0110.5 3h8A2.5 2.5 0 0121 5.5v8a2.5 2.5 0 01-2.5 2.5" fill="none" stroke="#1a1a1a" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+            </span></div>
+          <div class="td-r"><span class="l fit" data-w="98.3" data-g="lbl">Nominal Top Up</span><span class="v fit" id="td-nominal" data-w="67.8" data-g="val">Rp603.000</span></div>
+          <div class="td-r"><span class="l fit" data-w="75.8" data-g="lbl">Biaya Admin</span><span class="v fit" id="td-biaya" data-w="51.8" data-g="val">Rp2.000</span></div>
+          <div class="td-r last"><span class="l fit" data-w="24.3" data-g="lbl">PPN</span><span class="v fit" id="td-ppn" data-w="36.3" data-g="val">Rp198</span></div>
+          <div class="td-r total"><span class="l fit" data-w="32.3" data-g="tot">Total</span><span class="v fit" id="td-total" data-w="68.3" data-g="tot">Rp605.000</span></div>
+        </div>
+        <p class="td-legal"><span class="fit" data-w="134.3" data-g="legal">PT. Visionet Internasional</span><br>NPWP: 01.654.600.4-063.000<br>No. Seri Faktur:<br><span id="td-faktur">-</span><br>South Quarter Tower B LT. 20 UNIT ABCD Jl. RA. Kartini Kav<br>8, Cilandak Barat, Kota Adm. Jakarta Selatan, DKI Jakarta,<br>12430</p>
+      </div></div>
+    </section>
+    <div class="td-band"></div>
+    <button class="td-help" id="td-help">
+      <img src="data:image/png;base64,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" alt="">
+      <span class="t"><b><span class="fit" data-w="90.8" data-g="ht">Pusat Bantuan</span></b><small><span class="fit" data-w="180.3" data-g="hs">Solusi dari masalah kamu di OVO</span></small></span>
+      <svg viewBox="0 0 9 14"><path d="M1.5 1.5L7 7l-5.5 5.5"/></svg>
+    </button>
+  </main>
+  <footer class="td-f"><button class="td-cta" id="td-cta">Tutup</button></footer>
+  <div class="td-toast" id="td-toast">Nomor referensi disalin</div>
+ </div>
  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
   <symbol id="a-club" viewBox="0 0 24 24"><circle cx="12" cy="13" r="9" fill="none" stroke="#ffb000" stroke-width="2.2"/><circle cx="12" cy="13" r="4.2" fill="none" stroke="#ffb000" stroke-width="2.2"/><circle cx="12" cy="1.8" r=".9" fill="#ffb000"/></symbol>
   <symbol id="a-points" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#1a1a1a"/><path d="M9.2 17.5V6.8h3.4a3.2 3.2 0 010 6.4H9.2" fill="none" stroke="#fff" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></symbol>
@@ -336,12 +479,23 @@ button{font:inherit;border:0;background:none;cursor:pointer;color:inherit}
   <symbol id="a-barcode" viewBox="0 0 18 20"><path d="M1 1v18M4 1v18M8 1v18M11 1v18M15 1v18" stroke="#1a1a1a" stroke-width="1.6"/><path d="M6 1v18M13 1v18M17 1v18" stroke="#1a1a1a" stroke-width=".8"/></symbol>
  </defs></svg>
  <div id="prof" aria-hidden="true">
+  <div class="ep" id="ep" aria-hidden="true">
+   <div class="eh"><button id="ep-back" aria-label="Kembali"><svg viewBox="0 0 24 24"><path d="M20 12H4M10 6l-6 6 6 6"/></svg></button>Ubah Profil</div>
+   <div class="eb">
+    <div class="eh2"><div class="eav"><svg aria-hidden="true"><use href="#a-avatar"/></svg></div></div>
+    <div class="ecard"><div class="el">Nama Lengkap</div><input class="ein" id="ep-name" maxlength="30" autocomplete="off"><span class="eer" id="ep-ename"></span></div>
+    <div class="esep"></div>
+    <div class="erow"><div><span class="el">Nomor HP</span><b id="ep-phone"></b></div><button id="ep-uphone">Ubah</button></div>
+    <div class="erow"><div><span class="el">Email</span><b id="ep-mail"></b></div><button id="ep-umail">Ubah</button></div>
+   </div>
+   <div class="efoot"><button class="esave" id="ep-save" disabled>Simpan</button></div>
+  </div>
   <div class="ph" id="ph">Profile</div>
   <div class="ps" id="ps">
    <h1 class="pt">Profile</h1>
    <div class="pcard">
     <svg class="av" aria-hidden="true"><use href="#a-avatar"/></svg>
-    <div class="pinfo"><div class="pname" id="pname">ihsan</div><div class="pphone" id="pphone">087862712244</div></div>
+    <div class="pinfo"><div class="pname" id="pname">Faisal Hermawan</div><div class="pphone" id="pphone">085776025356</div></div>
     <button class="ubah" id="ubah">Ubah</button>
    </div>
    <button class="loy" id="loy"><svg aria-hidden="true"><use href="#a-barcode"/></svg>Loyalty Code</button>
@@ -472,10 +626,9 @@ button{font:inherit;border:0;background:none;cursor:pointer;color:inherit}
 
 /* ===== Backend: Supabase project "anubis". Top up diambil dari tabel Ox lewat RPC ox_riwayat. =====
    Satu baris Ox = satu top up = dua baris di daftar: "OVO · Biaya Top Up" (-biaya) dan "<Bank> · Top Up" (+nominal).
-   Mengetuk baris membuka halaman rincian (topup-berhasil-v2.html?id=<kode_a1>). */
+   Mengetuk baris membuka halaman rincian (overlay #tdet, data dari RPC ox_rincian). */
 const SUPABASE_URL='https://jtdnsrsollmknfijdqty.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp0ZG5zcnNvbGxta25maWpkcXR5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0OTIxMDAsImV4cCI6MjEwODA2ODEwMH0.snpF-wdt0XhwodmfQuW7J-uaG9GV-Q0fDJVoxJImcNE';
-const DETAIL_PAGE='topup-berhasil-v2.html';
 
 
 const rp=n=>'Rp'+String(Math.round(Number(n)||0)).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
@@ -489,7 +642,7 @@ function render(data){
     '<section><div class="date">'+esc(g.date)+'</div>'+
     g.items.map(i=>{
       const inner='<span class="t">'+esc(i.title)+'</span><div class="s"><span class="k">'+esc(i.sub)+'</span><span class="a">'+(i.type==='in'?'+':'-')+rp(i.amount)+'</span></div>';
-      return i.href?'<a class="item" href="'+esc(i.href)+'">'+inner+'</a>':'<div class="item">'+inner+'</div>';
+      return i.kode?'<a class="item" href="#td" data-kode="'+esc(i.kode)+'">'+inner+'</a>':'<div class="item">'+inner+'</div>';
     }).join('')+
     '</section>').join('');
 }
@@ -507,13 +660,14 @@ function fromOx(rows){
   rows.forEach(r=>{
     const d=wibDate(r.waktu);let g=map.get(d.key);
     if(!g){g={key:d.key,date:d.label,items:[]};map.set(d.key,g)}
-    const href=DETAIL_PAGE+'?id='+encodeURIComponent(r.kode);
-    if(r.biaya>0)g.items.push({title:'OVO',sub:'Biaya Top Up',type:'out',amount:r.biaya,href});
-    g.items.push({title:r.bank,sub:'Top Up',type:'in',amount:(Number(r.nominal)||0)+(Number(r.biaya)||0),href});
+    const kode=r.kode;
+    if(r.biaya>0)g.items.push({title:'OVO',sub:'Biaya Top Up',type:'out',amount:r.biaya,kode});
+    g.items.push({title:r.bank,sub:'Top Up',type:'in',amount:(Number(r.nominal)||0)+(Number(r.biaya)||0),kode});
   });
   return [...map.values()];
 }
 
+list.addEventListener('click',e=>{const a=e.target.closest('.item[data-kode]');if(!a)return;e.preventDefault();if(window.openTopupDetail)window.openTopupDetail(a.dataset.kode)});
 let last='',busy=false;
 async function refresh(timeout){
   if(busy)return;busy=true;
@@ -577,6 +731,7 @@ window.addEventListener('popstate',()=>{pushed=false;if(location.hash==='#histor
 document.addEventListener('visibilitychange',()=>{if(isOpen&&!document.hidden)refresh()});
 window.addEventListener('focus',()=>{if(isOpen)refresh()});
 window.addEventListener('pageshow',e=>{if(isOpen&&e.persisted)refresh()});
+window.__histOpen=()=>isOpen;
 if(location.hash==='#history')openHist(true);
 })();
 </script>
@@ -590,7 +745,7 @@ if(location.hash==='#history')openHist(true);
   function icon(n){return '<svg viewBox="0 0 24 24"><use href="#a-'+n+'"/></svg>'}
   var CHV='<span class="chv"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></span>';
   var MENU=[
-    {h:'Akun',rows:[['club','OVO Club','up'],['points','OVO Points','chv'],['stamp','OVO Stamp',''],['link','Aplikasi Terhubung','chv',1]]},
+    {h:'Akun',rows:[['club','OVO Premier','up'],['points','OVO Points','chv'],['stamp','OVO Stamp',''],['link','Aplikasi Terhubung','chv',1]]},
     {h:'Bantuan',rows:[['help','Pusat Bantuan','chv']]},
     {h:'Keamanan',rows:[['lock','Ubah Security Code','chv'],['finger','Fingerprint','sw']]},
     {h:'Tentang',rows:[['badge','Keuntungan Pakai OVO','chv'],['bulb','Panduan OVO','chv'],['doc','Syarat dan Ketentuan','chv'],['shield','Kebijakan Privasi','chv']]}
@@ -612,6 +767,7 @@ if(location.hash==='#history')openHist(true);
     navHome.classList.toggle('on',t==='home');navProf.classList.toggle('on',p);navInbox.classList.toggle('on',n);
     meta.content=t==='home'?HOME_THEME:'#ffffff';
     if(window.__closeLoyalty)window.__closeLoyalty();
+    if(window.__closeEp)window.__closeEp();
     if(p){ps.scrollTop=0;ph.classList.remove('on')}else closeSheet();
     if(window.__onTab)window.__onTab(t);
   }
@@ -636,11 +792,48 @@ if(location.hash==='#history')openHist(true);
   }
   function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;')}
 
-  $('ubah').addEventListener('click',function(){
-    openSheet('<div class="grab"></div><h3>Ubah Profil</h3>'+
-      '<label class="fld">Nama<input id="f-name" maxlength="30" value="'+esc($('pname').textContent)+'" autocomplete="off"><span class="er" id="e-name"></span></label>'+
-      '<label class="fld" style="margin-top:.4rem">Nomor HP<input id="f-phone" inputmode="numeric" maxlength="14" value="'+esc($('pphone').textContent)+'" autocomplete="off"><span class="er" id="e-phone"></span></label>'+
-      '<button class="btn" id="f-save">Simpan</button>');
+  /* ---- halaman Ubah Profil ---- */
+  var ep=$('ep'),epN=$('ep-name'),epSave=$('ep-save');
+  var dPhone='',dMail='',cMail='hermawananggraeny@gmail.com';
+  function epDirty(){
+    var n=epN.value.trim();
+    epSave.disabled=!n||(n===$('pname').textContent&&dPhone===$('pphone').textContent&&dMail===cMail);
+  }
+  function epRender(){$('ep-phone').textContent=dPhone;$('ep-mail').textContent=dMail;epDirty()}
+  function epOpen(){
+    epN.value=$('pname').textContent;dPhone=$('pphone').textContent;dMail=cMail;
+    $('ep-ename').textContent='';epRender();
+    ep.classList.add('on');ep.setAttribute('aria-hidden','false');document.body.classList.add('ep-open');
+  }
+  function epClose(){closeSheet();ep.classList.remove('on');ep.setAttribute('aria-hidden','true');document.body.classList.remove('ep-open')}
+  window.__closeEp=epClose;
+  $('ubah').addEventListener('click',epOpen);
+  $('ep-back').addEventListener('click',epClose);
+  epN.addEventListener('input',function(){$('ep-ename').textContent='';epDirty()});
+  function fieldSheet(title,label,id,val,mode,hint){
+    openSheet('<div class="grab"></div><h3>'+title+'</h3><p class="d">'+hint+'</p>'+
+      '<label class="fld">'+label+'<input id="'+id+'" '+mode+' maxlength="'+(id==='f-mail'?60:14)+'" value="'+esc(val)+'" autocomplete="off"><span class="er" id="e-f"></span></label>'+
+      '<button class="btn" id="'+id+'-ok">Simpan</button>');
+  }
+  $('ep-uphone').addEventListener('click',function(){fieldSheet('Ubah Nomor HP','Nomor HP','f-ph','' +dPhone,'inputmode="numeric"','Masukkan nomor HP aktif yang diawali 08.')});
+  $('ep-umail').addEventListener('click',function(){fieldSheet('Ubah Email','Email','f-mail',dMail,'inputmode="email" type="email"','Masukkan alamat email aktif kamu.')});
+  sh.addEventListener('click',function(e){
+    var t=e.target;
+    if(t.closest('#f-ph-ok')){
+      var v=$('f-ph').value.replace(/\s/g,'');
+      if(!/^08\d{8,12}$/.test(v)){$('e-f').textContent='Gunakan nomor HP yang diawali 08 (10–14 digit)';return}
+      dPhone=v;epRender();closeSheet();
+    }else if(t.closest('#f-mail-ok')){
+      var m=$('f-mail').value.trim();
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(m)){$('e-f').textContent='Format email tidak valid';return}
+      dMail=m;epRender();closeSheet();
+    }
+  });
+  epSave.addEventListener('click',function(){
+    var n=epN.value.trim();
+    if(!n){$('ep-ename').textContent='Nama tidak boleh kosong';return}
+    $('pname').textContent=n;$('pphone').textContent=dPhone;cMail=dMail;
+    epClose();say('Profil diperbarui');
   });
   $('so').addEventListener('click',function(){
     openSheet('<h3>Keluar dari OVO?</h3><p class="d">Kamu perlu masuk lagi untuk memakai akun ini.</p><div class="btns"><button class="btn o" data-close>Batal</button><button class="btn" id="so-ok">Sign Out</button></div>',true);
@@ -658,7 +851,7 @@ if(location.hash==='#history')openHist(true);
       $('pname').textContent=n;$('pphone').textContent=ph;closeSheet();say('Profil diperbarui');return;
     }
     if(t.closest('#so-ok')){closeSheet();setTab('home');say('Kamu sudah keluar (demo)');return}
-    var up=t.closest('[data-act="upgrade"]');if(up){e.stopPropagation();say('OVO Club: Upgrade segera hadir');return}
+    var up=t.closest('[data-act="upgrade"]');if(up){e.stopPropagation();say('OVO Premier: Upgrade segera hadir');return}
     var r=t.closest('.row');if(!r)return;
     if(r.dataset.act==='finger'){
       var sw=$('sw'),on=sw.getAttribute('aria-checked')!=='true';
@@ -736,11 +929,11 @@ if(location.hash==='#history')openHist(true);
     function add(k,l,t){if(!map[k]){map[k]={key:k,label:l,items:[]};order.push(k)}map[k].items.push(t)}
     rows.forEach(function(r){
       var d=wib(r.waktu);
-      if(r.biaya>0)add(d.key,d.label,rp(r.biaya)+' telah dipotong dari OVO Cash untuk biaya top up dari '+r.bank);
+      if(r.biaya>0)add(d.key,d.label,{t:rp(r.biaya)+' telah dipotong dari OVO Cash untuk biaya top up dari '+r.bank,k:r.kode});
       /* "Top up sebesar" = nilai sebelum dikurangi apa pun (nominal + biaya), sama dengan teks notifikasi dari server */
-      add(d.key,d.label,'Top up sebesar '+rp((Number(r.nominal)||0)+(Number(r.biaya)||0))+' melalui '+r.bank+', telah berhasil');
+      add(d.key,d.label,{t:'Top up sebesar '+rp((Number(r.nominal)||0)+(Number(r.biaya)||0))+' melalui '+r.bank+', telah berhasil',k:r.kode});
     });
-    STATIC.forEach(function(s){add(s.key,s.label,s.text)});
+    STATIC.forEach(function(s){add(s.key,s.label,{t:s.text})});
     order.sort().reverse();
     return order.map(function(k){return map[k]});
   }
@@ -757,13 +950,14 @@ if(location.hash==='#history')openHist(true);
     tn.textContent=loaded?'Notifikasi ('+count(gn)+')':'Notifikasi';tm.textContent='Pesan ('+count(gm)+')';
     if(tab==='n'&&!loaded){il.innerHTML='<p class="none">'+(failed?'Gagal memuat notifikasi.<br>Periksa koneksi, daftar akan dimuat ulang otomatis.':'Memuat notifikasi\u2026')+'</p>';return}
     var gs=tab==='n'?gn:gm;
-    il.innerHTML=gs.length?gs.map(function(g){return '<div class="dt">'+esc(g.label)+'</div>'+g.items.map(function(t){return '<div class="ni">'+esc(t)+'</div>'}).join('')}).join(''):'<p class="none">Belum ada notifikasi.</p>';
+    il.innerHTML=gs.length?gs.map(function(g){return '<div class="dt">'+esc(g.label)+'</div>'+g.items.map(function(t){if(typeof t==='string')t={t:t};return '<div class="ni"'+(t.k?' data-kode="'+esc(t.k)+'" role="button"':'')+'>'+esc(t.t)+'</div>'}).join('')}).join(''):'<p class="none">Belum ada notifikasi.</p>';
   }
   function setT(t){
     tab=t;tn.classList.toggle('on',t==='n');tm.classList.toggle('on',t==='m');
     tn.setAttribute('aria-selected',t==='n');tm.setAttribute('aria-selected',t==='m');
     ul.style.transform=t==='n'?'none':'translateX(100%)';il.scrollTop=0;paint();
   }
+  il.addEventListener('click',function(e){var n=e.target.closest('.ni[data-kode]');if(n&&window.openTopupDetail)window.openTopupDetail(n.getAttribute('data-kode'))});
   tn.addEventListener('click',function(){setT('n')});tm.addEventListener('click',function(){setT('m')});
 
   var busy=false,timer=null;
@@ -849,6 +1043,89 @@ if(location.hash==='#history')openHist(true);
   /* izin notifikasi harus dipicu gestur pengguna (wajib di iOS): minta pada sentuhan pertama */
   document.addEventListener('click',function f(){document.removeEventListener('click',f);minta()},{once:true});
   window.aktifkanNotifikasi=minta;
+})();
+</script>
+<script>
+/* Halaman detail Top Up: dibuka dari History dan dari Inbox > Notifikasi. Data real dari RPC ox_rincian. */
+(function(){
+  var $=function(i){return document.getElementById(i)};
+  var URL_='https://jtdnsrsollmknfijdqty.supabase.co',KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp0ZG5zcnNvbGxta25maWpkcXR5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0OTIxMDAsImV4cCI6MjEwODA2ODEwMH0.snpF-wdt0XhwodmfQuW7J-uaG9GV-Q0fDJVoxJImcNE';
+  var T=$('tdet'),SC=$('td-scroll'),meta=document.querySelector('meta[name="theme-color"]');
+  var BLN=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+  var FB_LOGO={bca:'data:image/png;base64,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'};
+  var rp=function(n){return 'Rp'+String(Math.round(Number(n)||0)).replace(/\B(?=(\d{3})+(?!\d))/g,'.')};
+  function wib(iso){
+    var p={};new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Jakarta',day:'2-digit',month:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date(iso)).forEach(function(x){p[x.type]=x.value});
+    return {tanggal:p.day+' '+BLN[+p.month-1]+' '+p.year,waktu:p.hour+':'+p.minute};
+  }
+  /* samakan lebar teks dengan referensi; dijalankan sekali saat teks contoh masih terpasang */
+  function fit(){
+    var g={};
+    T.querySelectorAll('.fit[data-w]').forEach(function(el){
+      el.style.fontSize='100px';var w=el.getBoundingClientRect().width||1;el.style.fontSize='';
+      (g[el.dataset.g]=g[el.dataset.g]||[]).push({el:el,size:100*parseFloat(el.dataset.w)/w});
+    });
+    Object.keys(g).forEach(function(k){
+      var l=g[k],s=l.map(function(x){return x.size}).sort(function(a,b){return a-b}),m=s[Math.floor(s.length/2)];
+      l.forEach(function(x){x.el.style.fontSize=m.toFixed(2)+'px';var lg=x.el.closest('.td-legal');if(lg)lg.style.fontSize=m.toFixed(2)+'px'});
+    });
+  }
+  function state(kind,msg){
+    T.classList.remove('loading');
+    if(kind==='ok'){T.classList.remove('failed');$('td-state').hidden=true;return}
+    T.classList.add('failed');$('td-state').hidden=false;$('td-msg').textContent=msg;
+  }
+  function render(d){
+    var t=wib(d.waktu),bn=(d.bank||'').toLowerCase(),key=bn.indexOf('permata')>-1?'permata':(/\bbca\b/.test(bn)?'bca':null);
+    var logo=$('td-logo'),src=d.bank_logo||(key==='bca'?FB_LOGO.bca:(key==='permata'?logo.getAttribute('data-permata'):null));
+    $('td-status').textContent=d.status||'Top Up Berhasil';
+    $('td-amount').textContent=rp(d.total);
+    $('td-bank').textContent=d.bank||'';
+    if(src){logo.src=src;logo.style.display='';logo.style.transform=key==='bca'?'none':''}else{logo.removeAttribute('src');logo.style.display='none'}
+    $('td-judul').textContent=d.judul_tujuan||'Masuk ke OVO Cash';
+    $('td-masuk').textContent=rp(d.nominal);
+    $('td-tanggal').textContent=t.tanggal;$('td-waktu').textContent=t.waktu;
+    var ref=$('td-ref');ref.textContent=d.no_referensi||'-';ref.dataset.full=d.no_referensi||'';
+    $('td-nominal').textContent=rp(d.nominal);$('td-biaya').textContent=rp(d.biaya);$('td-ppn').textContent=rp(d.ppn);$('td-total').textContent=rp(d.total);
+    $('td-faktur').textContent=d.no_referensi||'-';
+    state('ok');
+  }
+  var cur=null,seq=0,pushed=false,fitted=false;
+  $('td-logo').setAttribute('data-permata',$('td-logo').getAttribute('src'));
+  function load(id){
+    var my=++seq;T.classList.add('loading');
+    fetch(URL_+'/rest/v1/rpc/ox_rincian',{method:'POST',headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json'},body:JSON.stringify({p_id:id||null})})
+    .then(function(r){if(!r.ok)throw 0;return r.json()})
+    .then(function(d){if(my!==seq)return;if(!d)return state('err','Data top up tidak ditemukan.');render(d)})
+    .catch(function(){if(my===seq)state('err','Gagal memuat data. Periksa koneksi lalu coba lagi.')});
+  }
+  function theme(c){if(meta)meta.content=c}
+  function hide(){
+    if(!T.classList.contains('on'))return;
+    T.classList.remove('on');T.setAttribute('aria-hidden','true');pushed=false;seq++;
+    theme(window.__histOpen&&window.__histOpen()?'#3e1c99':(window.__tabTheme?window.__tabTheme():'#ffffff'));
+  }
+  function close(){if(pushed){pushed=false;try{history.back();return}catch(e){}}hide()}
+  window.openTopupDetail=function(id){
+    if(!id)return;
+    cur=id;T.classList.add('on');T.setAttribute('aria-hidden','false');T.classList.remove('exp','scrolled');
+    $('td-toggle').setAttribute('aria-expanded','false');SC.scrollTop=0;theme('#ffffff');
+    if(!pushed){try{history.pushState({td:1},'','#detail');pushed=true}catch(e){}}
+    var go=function(){load(id)};
+    if(fitted)return go();
+    fitted=true;
+    (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).catch(function(){}).then(function(){fit();go()});
+  };
+  $('td-x').addEventListener('click',close);$('td-cta').addEventListener('click',close);
+  $('td-retry').addEventListener('click',function(){load(cur)});
+  $('td-toggle').addEventListener('click',function(){var o=T.classList.toggle('exp');$('td-toggle').setAttribute('aria-expanded',o)});
+  $('td-help').addEventListener('click',function(){var t=$('td-toast');t.textContent='Pusat Bantuan';t.classList.add('show');setTimeout(function(){t.classList.remove('show')},1400)});
+  SC.addEventListener('scroll',function(){T.classList.toggle('scrolled',SC.scrollTop>4)},{passive:true});
+  $('td-copy').addEventListener('click',function(){
+    var f=$('td-ref').dataset.full,done=function(){var t=$('td-toast');t.textContent='Nomor referensi disalin';t.classList.add('show');setTimeout(function(){t.classList.remove('show')},1600)};
+    try{navigator.clipboard.writeText(f).then(done,done)}catch(e){done()}
+  });
+  window.addEventListener('popstate',function(){if(T.classList.contains('on')&&location.hash!=='#detail')hide()});
 })();
 </script>
 </body>

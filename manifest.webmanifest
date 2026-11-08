@@ -1,15 +1,15 @@
 {
   "id": "./",
-  "name": "OVO — Beranda",
+  "name": "OVO",
   "short_name": "OVO",
-  "description": "Aplikasi OVO Beranda",
+  "description": "OVO by Supebank",
   "lang": "id-ID",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#c9c8e6",
-  "theme_color": "#d2d1f2",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
   "icons": [
     {
       "src": "./icons/icon-192.png",

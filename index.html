@@ -534,6 +534,83 @@ html.lg-lock body > :not(#lg){visibility:hidden}
 #lg .lg-forgot:active{opacity:.7}
 #lg .lg-key{width:clamp(56px,8vh,72px);height:clamp(56px,8vh,72px);min-height:0;aspect-ratio:1;justify-self:center;border-radius:50%}
 </style>
+
+<style id="tf-css">
+/* ===== Alur Transfer (overlay layar penuh, di-scope ke #tf) ===== */
+#tf{--tf-purple:#3c1a98;--tf-indigo:#2a1a66;--tf-ink:#1c1c1c;--tf-muted:#6b6b6b;--tf-line:#7d7d7d;--tf-surface:#f4f4f4;--tf-off:#8ab4e8;--tf-on:#4c2fb3;--tf-teal:#1fb5b8;
+  position:fixed;top:0;bottom:0;left:0;right:0;margin:0 auto;width:100%;max-width:480px;z-index:55;background:#fff;color:var(--tf-ink);
+  display:none;overflow:hidden;font-size:1.4rem;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation;overscroll-behavior:none}
+#tf.open{display:block}
+@media (prefers-reduced-motion:no-preference){#tf.open{animation:pageIn .26s cubic-bezier(.2,.7,.2,1) backwards}}
+#tf *{box-sizing:border-box}
+#tf button,#tf input,#tf select{font-family:inherit}
+#tf .tf-screen{position:absolute;inset:0;display:flex;flex-direction:column;background:#fff;transform:translateX(100%);visibility:hidden}
+#tf .tf-screen.active{transform:none;visibility:visible}
+#tf .tf-screen.behind{transform:translateX(-22%);visibility:visible}
+#tf.tf-ready .tf-screen{transition:transform .28s cubic-bezier(.2,.8,.2,1),visibility 0s .28s}
+#tf.tf-ready .tf-screen.active,#tf.tf-ready .tf-screen.behind{transition:transform .28s cubic-bezier(.2,.8,.2,1),visibility 0s 0s}
+@media (prefers-reduced-motion:reduce){#tf.tf-ready .tf-screen,#tf.tf-ready .tf-screen.active,#tf.tf-ready .tf-screen.behind{transition:none}}
+#tf .tf-appbar{flex:none;background:var(--tf-purple);color:#fff;padding-top:env(safe-area-inset-top,0px)}
+#tf .tf-row{display:flex;align-items:center;height:5.6rem}
+#tf .tf-back{width:4.8rem;height:4.8rem;margin-left:.2rem;border:0;background:none;color:#fff;display:grid;place-items:center;border-radius:50%}
+#tf .tf-back:active{background:rgba(255,255,255,.18)}
+#tf .tf-back svg{width:2.4rem;height:2.4rem}
+#tf .tf-appbar h1{margin-left:1.8rem;font-size:1.3rem;font-weight:400;text-transform:uppercase;letter-spacing:.02em}
+#tf .tf-tabs{display:flex;height:4.5rem}
+#tf .tf-tabs button{flex:1;border:0;background:none;color:rgba(255,255,255,.7);font-size:1.2rem;border-bottom:.3rem solid transparent;padding-bottom:.2rem}
+#tf .tf-tabs button[aria-selected="true"]{color:#fff;border-bottom-color:#bdeefc}
+#tf .tf-tabs button:active{background:rgba(255,255,255,.1)}
+#tf .tf-menu{flex:none;background:#f5f5f5;padding:1.9rem 1.9rem 1.6rem}
+#tf .tf-card{display:flex;align-items:center;width:100%;height:6.75rem;border:0;background:#fff;border-radius:.6rem;box-shadow:0 .1rem .25rem rgba(0,0,0,.08);margin-bottom:.95rem;padding:0 0 0 1.9rem;font-size:1.3rem;color:var(--tf-ink);text-align:left}
+#tf .tf-card:last-child{margin-bottom:0}
+#tf .tf-card:active{background:#efedf9}
+#tf .tf-card .tf-ic{flex:none;width:2.8rem;height:2.8rem;margin-right:1.3rem;color:var(--tf-teal)}
+#tf .tf-card .tf-chev{margin-left:auto;margin-right:2.4rem;width:2rem;height:2rem;color:#54447f}
+#tf .tf-pane{display:flex;flex-direction:column;height:calc(100% - 0px)}
+#tf .tf-pane[hidden]{display:none}
+#tf h2{font-size:1.3rem;font-weight:700;line-height:1.8rem;padding:2.7rem 1.5rem 0}
+#tf .tf-empty{display:flex;flex-direction:column;align-items:center;color:var(--tf-muted);font-size:1.3rem;line-height:2rem}
+#tf .tf-empty svg{width:12.2rem;height:8.3rem;margin-top:6.5rem}
+#tf .tf-empty p{margin-top:3.3rem}
+#tf .tf-empty.tf-plain{margin-top:12rem}
+#tf .tf-empty.tf-plain p{margin-top:0}
+#tf .tf-form{flex:1;display:flex;flex-direction:column;padding:0 3rem;overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
+#tf .tf-form::-webkit-scrollbar{display:none}
+#tf .tf-line{display:block;width:100%;border:0;border-bottom:.1rem solid var(--tf-line);border-radius:0;background:none;outline:0;color:var(--tf-ink);font-size:1.4rem;line-height:2rem;padding:0;appearance:none;-webkit-appearance:none;-webkit-user-select:text;user-select:text}
+#tf .tf-line::placeholder{color:#8a8a8a;opacity:1}
+#tf .tf-line:focus{border-bottom:.2rem solid var(--tf-purple);margin-bottom:-.1rem}
+#tf .tf-contact{display:flex;align-items:flex-end;height:4.8rem;margin-top:2.05rem}
+#tf .tf-contact .tf-line{flex:1;padding-bottom:.4rem}
+#tf .tf-pick{flex:none;width:2.4rem;height:2.4rem;margin:0 0 .3rem .3rem;border:0;background:none;color:#555;display:grid;place-items:center}
+#tf .tf-pick svg{width:1.9rem;height:2.2rem}
+#tf .tf-lbl{display:block;font-size:1.05rem;line-height:1.4rem;color:var(--tf-muted);letter-spacing:.02em}
+#tf .tf-sel{position:relative;margin:1.65rem .35rem 0}
+#tf .tf-sel select{padding-bottom:.3rem;color:var(--tf-indigo);font-size:1.4rem}
+#tf .tf-sel svg{position:absolute;right:1.5rem;top:.5rem;width:1.6rem;height:1.6rem;color:#666;pointer-events:none}
+#tf .tf-rek{margin-top:4.9rem}
+#tf .tf-rek::placeholder{font-size:1.2rem}
+#tf .tf-src{margin-top:var(--gap)}
+#tf .tf-srcbox{margin-top:.7rem;height:5.55rem;border:.1rem solid #dcdcdc;border-radius:.8rem;display:flex;align-items:center;padding:0 1.5rem 0 1.4rem;gap:1.5rem}
+#tf .tf-av{flex:none;width:3rem;height:3rem;border-radius:50%;background:#f4f2fd;display:grid;place-items:center}
+#tf .tf-av svg{width:1.6rem;height:1.6rem}
+#tf .tf-srcbox b{display:block;font-size:1.2rem;line-height:1.6rem;font-weight:700}
+#tf .tf-srcbox small{display:block;font-size:1.2rem;line-height:1.6rem;color:#3a3a3a}
+#tf .tf-srcbox small i{font-style:normal;color:var(--tf-ink)}
+#tf .tf-nom{position:relative;margin-top:2.7rem;height:9.75rem;background:var(--tf-surface);border-radius:.6rem;padding:1.4rem 1.5rem 0}
+#tf .tf-nom input{display:block;width:100%;border:0;background:none;outline:0;margin-top:1rem;font-size:2.1rem;line-height:2.8rem;color:var(--tf-indigo);padding:0;-webkit-user-select:text;user-select:text}
+#tf .tf-err{position:absolute;left:1.5rem;right:1.5rem;bottom:.9rem;font-size:1.1rem;line-height:1.4rem;color:#d32f2f;min-height:1.4rem}
+#tf .tf-msg{margin:5.4rem .35rem 0;font-size:1.55rem}
+#tf .tf-msg::placeholder{color:#a8a8a8}
+#tf .tf-count{text-align:right;font-size:1.05rem;line-height:1.2rem;color:#8a8a8a}
+#tf .tf-foot{margin-top:auto;padding:2rem 0 calc(3rem + env(safe-area-inset-bottom,0px));flex:none}
+#tf .tf-go{display:block;width:100%;height:3.75rem;border:0;border-radius:2rem;background:var(--tf-off);color:#cfe0f5;font-weight:700;text-transform:uppercase;letter-spacing:.06em;transition:background .15s}
+#tf .tf-go:not(:disabled){background:var(--tf-on);color:#fff}
+#tf .tf-go:not(:disabled):active{filter:brightness(.88)}
+#tf .tf-go.tf-s{font-size:1rem}
+#tf .tf-go.tf-b{font-size:1.35rem}
+#tf .tf-toast{position:absolute;left:2.4rem;right:2.4rem;bottom:9rem;background:#323232;color:#fff;padding:1.2rem 1.6rem;border-radius:.6rem;font-size:1.3rem;text-align:center;opacity:0;pointer-events:none;transition:opacity .25s;z-index:5}
+#tf .tf-toast.show{opacity:1}
+</style>
 </head>
 <body>
 <div id="lg">
@@ -623,7 +700,7 @@ html.lg-lock body > :not(#lg){visibility:hidden}
     </div>
     <div class="acts-w"><div class="acts">
       <button><svg viewBox="0 0 43 43" style="width:2.150rem;height:2.150rem;margin:-0.075rem 0;flex:none" aria-hidden="true"><path fill="#fff" fill-rule="evenodd" d="M16.8 3.1 15.1 3.9 14.4 4.0 13.0 4.9 12.5 4.9 12.0 5.1 11.1 5.9 10.5 6.1 10.0 6.6 9.5 6.9 8.8 7.8 7.0 9.4 6.8 9.9 6.0 10.8 5.8 11.4 5.1 12.0 4.9 12.5 4.8 13.2 4.0 14.4 3.8 15.5 3.1 16.8 3.0 20.0 2.9 20.1 2.9 23.0 3.0 23.1 3.0 25.2 3.1 25.4 3.1 26.1 3.8 27.5 4.0 28.5 4.8 29.6 4.9 30.4 5.1 30.9 5.9 31.8 6.0 32.2 6.5 32.8 6.8 33.2 9.4 35.9 9.9 36.1 10.8 36.9 11.4 37.1 12.0 37.8 12.8 38.1 13.1 38.1 14.4 38.9 15.1 39.0 16.2 39.6 17.4 39.8 17.5 39.9 19.0 39.9 19.1 40.0 23.8 40.0 23.9 39.9 26.2 39.8 27.9 39.0 28.5 38.9 29.8 38.1 30.8 37.9 31.8 37.0 32.2 36.9 32.8 36.4 33.4 36.0 36.0 33.4 36.2 32.9 36.8 32.4 37.1 31.5 37.9 30.8 38.1 30.1 38.1 29.8 38.8 28.9 39.0 27.8 39.8 26.4 39.8 25.6 39.9 25.5 39.9 24.2 40.0 24.1 40.0 19.0 39.9 18.9 39.8 16.5 39.4 15.9 39.4 15.6 39.1 15.4 38.9 14.4 38.5 13.6 38.1 13.2 37.9 12.1 37.0 11.1 36.8 10.5 36.2 10.0 36.0 9.5 33.4 6.9 32.9 6.6 32.4 6.1 31.6 5.9 30.9 5.1 30.4 4.9 29.6 4.8 28.5 4.0 27.8 3.9 26.1 3.1 25.4 3.1 25.2 3.0 19.6 2.9 19.5 3.0 17.5 3.0 17.4 3.1ZM21.1 12.0 21.9 12.0 22.1 12.1 22.9 12.9 23.1 13.4 23.1 18.5 23.2 18.6 23.2 19.2 23.4 19.5 23.9 19.8 29.4 19.8 30.1 20.1 30.9 21.0 30.9 22.0 30.8 22.2 29.9 23.0 29.1 23.2 28.8 23.2 28.6 23.1 28.4 23.2 27.6 23.2 27.5 23.1 24.5 23.1 24.4 23.2 23.8 23.2 23.4 23.5 23.2 23.8 23.2 24.4 23.1 24.5 23.1 25.2 23.2 25.4 23.2 28.4 23.1 28.5 23.2 28.6 23.2 29.2 22.9 30.0 21.9 30.9 21.0 30.9 20.8 30.8 19.9 29.8 19.8 29.4 19.8 24.0 19.6 23.6 19.2 23.2 18.5 23.2 18.4 23.1 17.6 23.1 17.5 23.2 14.5 23.2 14.4 23.1 14.2 23.2 13.8 23.2 12.8 22.8 12.0 21.9 12.0 21.0 12.1 20.8 12.8 20.1 13.5 19.8 19.1 19.8 19.6 19.4 19.8 19.1 19.8 13.5 20.4 12.5Z"/></svg>Top Up</button>
-      <button><svg viewBox="0 0 43 43" style="width:2.150rem;height:2.150rem;margin:-0.075rem 0;flex:none" aria-hidden="true"><path fill="#fff" fill-rule="evenodd" d="M11.9 5.2 11.4 5.8 10.5 6.1 9.9 6.8 9.4 7.0 9.0 7.5 7.0 9.4 6.9 9.8 6.0 10.8 5.9 11.2 5.0 12.2 4.9 13.0 4.1 14.1 3.9 15.2 3.1 16.9 3.1 17.6 3.0 17.8 3.0 19.9 2.9 20.0 3.0 25.2 3.1 25.4 3.1 26.1 3.4 26.9 3.8 27.5 4.0 28.5 4.8 29.6 4.9 30.4 5.1 30.9 5.9 31.8 6.0 32.2 6.5 32.8 6.9 33.4 9.5 36.0 9.9 36.1 10.5 36.8 11.4 37.1 12.4 38.0 13.5 38.1 13.6 38.2 16.1 38.0 16.5 37.9 18.8 35.8 19.5 34.1 19.8 33.2 19.8 22.0 19.9 21.9 19.9 21.5 19.5 20.9 19.1 20.9 18.2 21.5 17.4 22.6 16.5 23.1 15.8 23.2 14.8 22.9 14.1 22.2 14.0 22.0 14.0 20.9 14.9 19.8 20.6 14.1 21.4 13.9 22.1 14.0 28.1 19.9 28.9 20.9 28.9 22.1 28.8 22.4 28.2 22.9 27.2 23.2 26.1 23.0 25.8 22.8 24.4 21.2 23.9 21.0 23.4 21.0 23.1 21.2 23.1 22.4 23.2 22.5 23.2 23.2 23.1 23.4 23.1 32.5 23.2 32.6 23.2 33.6 24.1 35.6 24.6 36.2 26.6 38.0 29.1 38.2 29.2 38.1 30.5 38.0 31.0 37.8 31.6 37.1 32.2 36.9 32.8 36.4 33.4 36.0 34.8 34.8 36.0 33.4 36.2 32.9 36.8 32.4 37.1 31.5 37.9 30.8 38.1 30.1 38.1 29.8 38.8 28.9 39.0 27.8 39.8 26.4 39.9 24.2 40.0 24.1 40.0 19.1 39.9 19.0 39.9 17.4 39.8 17.2 39.6 16.2 39.0 15.1 38.9 14.4 38.5 13.6 38.1 13.2 38.0 12.5 37.6 11.8 37.0 11.1 36.8 10.5 36.1 9.9 35.9 9.4 33.5 7.0 33.0 6.8 32.4 6.1 31.6 5.9 30.6 5.0 29.9 4.9 28.5 4.0 27.6 3.9 26.0 3.1 25.1 3.1 25.0 3.0 18.0 3.0 17.9 3.1 16.9 3.1 15.2 3.9 14.5 4.0 13.1 4.9 12.6 4.9Z"/></svg>Transfer</button>
+      <button id="btn-transfer" aria-haspopup="dialog"><svg viewBox="0 0 43 43" style="width:2.150rem;height:2.150rem;margin:-0.075rem 0;flex:none" aria-hidden="true"><path fill="#fff" fill-rule="evenodd" d="M11.9 5.2 11.4 5.8 10.5 6.1 9.9 6.8 9.4 7.0 9.0 7.5 7.0 9.4 6.9 9.8 6.0 10.8 5.9 11.2 5.0 12.2 4.9 13.0 4.1 14.1 3.9 15.2 3.1 16.9 3.1 17.6 3.0 17.8 3.0 19.9 2.9 20.0 3.0 25.2 3.1 25.4 3.1 26.1 3.4 26.9 3.8 27.5 4.0 28.5 4.8 29.6 4.9 30.4 5.1 30.9 5.9 31.8 6.0 32.2 6.5 32.8 6.9 33.4 9.5 36.0 9.9 36.1 10.5 36.8 11.4 37.1 12.4 38.0 13.5 38.1 13.6 38.2 16.1 38.0 16.5 37.9 18.8 35.8 19.5 34.1 19.8 33.2 19.8 22.0 19.9 21.9 19.9 21.5 19.5 20.9 19.1 20.9 18.2 21.5 17.4 22.6 16.5 23.1 15.8 23.2 14.8 22.9 14.1 22.2 14.0 22.0 14.0 20.9 14.9 19.8 20.6 14.1 21.4 13.9 22.1 14.0 28.1 19.9 28.9 20.9 28.9 22.1 28.8 22.4 28.2 22.9 27.2 23.2 26.1 23.0 25.8 22.8 24.4 21.2 23.9 21.0 23.4 21.0 23.1 21.2 23.1 22.4 23.2 22.5 23.2 23.2 23.1 23.4 23.1 32.5 23.2 32.6 23.2 33.6 24.1 35.6 24.6 36.2 26.6 38.0 29.1 38.2 29.2 38.1 30.5 38.0 31.0 37.8 31.6 37.1 32.2 36.9 32.8 36.4 33.4 36.0 34.8 34.8 36.0 33.4 36.2 32.9 36.8 32.4 37.1 31.5 37.9 30.8 38.1 30.1 38.1 29.8 38.8 28.9 39.0 27.8 39.8 26.4 39.9 24.2 40.0 24.1 40.0 19.1 39.9 19.0 39.9 17.4 39.8 17.2 39.6 16.2 39.0 15.1 38.9 14.4 38.5 13.6 38.1 13.2 38.0 12.5 37.6 11.8 37.0 11.1 36.8 10.5 36.1 9.9 35.9 9.4 33.5 7.0 33.0 6.8 32.4 6.1 31.6 5.9 30.6 5.0 29.9 4.9 28.5 4.0 27.6 3.9 26.0 3.1 25.1 3.1 25.0 3.0 18.0 3.0 17.9 3.1 16.9 3.1 15.2 3.9 14.5 4.0 13.1 4.9 12.6 4.9Z"/></svg>Transfer</button>
       <button><svg viewBox="0 0 47 45" style="width:2.350rem;height:2.250rem;margin:-0.125rem 0;flex:none" aria-hidden="true"><path fill="#fff" fill-rule="evenodd" d="M10.2 16.1 10.0 16.6 9.9 18.4 9.0 19.9 8.9 21.2 8.2 22.9 8.2 23.2 8.0 23.9 7.9 25.2 7.0 26.8 6.8 29.2 6.1 30.4 6.0 31.4 5.1 33.5 4.9 35.9 4.0 37.5 4.0 39.5 4.8 40.4 5.1 41.1 5.6 41.6 6.8 42.0 40.2 42.0 41.2 41.6 41.8 41.1 41.9 40.8 42.9 39.4 42.9 37.4 42.0 35.8 41.8 33.4 41.4 32.5 41.1 32.2 40.9 31.4 40.9 30.6 40.1 29.0 39.9 26.8 39.4 25.6 39.0 25.1 38.9 24.0 38.8 23.9 38.5 22.5 38.2 22.1 37.9 20.0 37.0 18.1 36.9 16.5 36.5 15.9 36.0 15.4 35.1 14.9 34.6 14.8 34.1 14.2 33.4 13.9 33.0 13.9 31.1 13.1 28.9 12.9 28.0 12.5 27.6 12.5 26.5 12.1 25.2 12.1 25.1 12.0 21.8 12.0 21.6 12.1 19.6 12.2 19.1 12.5 18.8 12.5 17.2 13.0 15.8 13.1 14.2 13.8 13.5 13.9 12.2 14.9 11.9 14.9 11.2 15.1ZM22.8 18.0 24.2 18.0 24.9 18.5 25.1 19.1 25.1 19.6 25.2 19.8 25.1 20.1 25.1 26.5 25.4 26.8 25.9 26.8 26.4 26.5 27.8 25.0 28.9 24.5 29.5 24.5 30.1 24.9 30.9 25.6 30.9 26.0 31.0 26.1 30.9 26.9 30.6 27.2 26.0 32.0 24.4 33.5 23.8 33.8 23.1 33.8 22.5 33.5 21.2 32.1 20.6 31.8 20.1 31.2 19.8 30.6 16.9 27.9 16.0 26.8 16.0 25.6 16.8 24.9 17.5 24.5 18.1 24.5 18.8 24.9 19.0 24.9 19.9 25.6 20.1 26.1 20.9 26.8 21.4 26.9 21.8 26.6 21.9 26.2 21.8 25.9 21.8 19.4 22.0 18.6ZM3.1 9.8 3.1 10.2 3.0 10.4 3.0 17.8 3.9 20.1 4.4 20.6 4.6 20.6 5.1 20.2 5.2 19.6 5.9 18.1 5.9 17.6 6.1 17.1 6.1 16.8 6.5 16.2 6.8 15.5 6.8 11.5 6.9 11.4 6.9 10.6 8.4 8.9 9.6 8.6 9.8 8.5 32.2 8.5 32.4 8.4 36.4 8.4 36.5 8.5 37.4 8.5 38.6 9.0 39.2 9.8 40.0 10.4 40.1 10.8 40.1 12.4 40.2 12.5 40.1 15.4 40.9 17.1 41.1 18.5 42.0 20.5 42.5 20.6 42.9 20.2 43.4 18.9 43.8 18.2 43.8 17.8 43.9 17.6 43.9 10.5 43.8 10.4 43.8 9.9 42.9 8.0 41.4 6.4 40.6 6.0 39.6 5.2 39.0 5.0 37.5 5.0 37.4 4.9 9.2 4.9 9.1 5.0 7.9 5.0 6.0 6.0 5.2 6.6 4.0 8.0Z"/></svg>Tarik Tunai</button>
       <button id="btn-history" aria-haspopup="dialog"><svg viewBox="0 0 43 43" style="width:2.150rem;height:2.150rem;margin:-0.075rem 0;flex:none" aria-hidden="true"><path fill="#fff" fill-rule="evenodd" d="M6.9 5.1 5.1 6.9 4.9 7.5 4.0 8.5 3.9 9.1 3.2 10.1 3.0 11.0 3.0 13.0 2.9 13.1 2.9 30.2 3.0 30.4 3.0 31.8 3.1 31.9 3.1 32.5 3.9 33.8 4.0 34.4 4.8 35.2 5.1 36.0 6.6 37.6 7.4 38.0 8.5 38.9 8.8 38.9 10.2 39.8 10.6 39.9 11.8 39.9 11.9 40.0 31.1 40.0 31.2 39.9 32.4 39.9 32.8 39.6 33.0 39.6 33.6 39.1 34.6 38.8 35.5 38.0 36.2 37.6 37.8 36.1 38.0 35.5 38.8 34.6 39.1 33.6 39.6 33.0 39.9 32.2 39.9 31.4 40.0 31.2 40.0 11.9 39.9 11.8 39.9 10.6 39.6 10.2 39.6 10.0 39.0 9.1 38.9 8.5 38.1 7.6 37.8 6.9 36.0 5.1 35.2 4.8 34.4 4.0 33.8 3.9 32.5 3.1 32.0 3.1 31.9 3.0 29.9 3.0 29.8 2.9 12.5 2.9 12.4 3.0 11.1 3.0 11.0 3.1 10.1 3.2 9.4 3.8 8.4 4.1 7.5 4.9ZM10.0 28.8 10.2 28.2 10.6 28.0 11.4 27.1 12.2 26.9 30.6 26.9 30.8 27.0 31.4 27.0 32.0 27.8 32.8 28.4 32.9 28.6 32.9 29.4 31.5 30.8 31.2 30.9 30.6 30.9 30.5 31.0 12.1 31.0 12.0 30.9 11.5 30.9 10.1 29.5ZM10.0 21.2 10.2 20.8 11.0 20.0 11.5 19.8 31.4 19.8 32.0 20.1 32.6 20.8 32.9 21.2 32.9 21.8 32.6 22.2 31.5 23.1 30.5 23.1 30.4 23.2 29.5 23.2 29.4 23.1 13.5 23.1 13.4 23.2 12.1 23.1 11.9 23.2 11.0 22.9 10.2 22.1ZM10.0 13.8 10.2 13.2 10.6 13.0 11.4 12.1 12.2 11.9 30.6 11.9 31.5 12.1 32.0 12.8 32.8 13.4 32.9 13.6 32.9 14.4 31.5 15.8 30.6 16.0 12.1 16.0 12.0 15.9 11.5 15.9 10.1 14.5Z"/></svg>History</button>
     </div></div>
@@ -681,6 +758,93 @@ html.lg-lock body > :not(#lg){visibility:hidden}
   </header>
   <main id="hist-list"></main>
  </div>
+
+  <div id="tf" role="dialog" aria-label="Transfer" aria-hidden="true">
+
+    <section class="tf-screen active" id="tf-s-transfer" aria-label="Transfer">
+      <header class="tf-appbar">
+        <div class="tf-row"><button class="tf-back" data-tf-back aria-label="Kembali"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12H4M10 6l-6 6 6 6"/></svg></button><h1>Transfer</h1></div>
+        <div class="tf-tabs" role="tablist">
+          <button role="tab" aria-selected="true" data-tf-tab="baru">Penerima Baru</button>
+          <button role="tab" aria-selected="false" data-tf-tab="fav">Favorit</button>
+        </div>
+      </header>
+      <div class="tf-pane" id="tf-tab-baru" role="tabpanel">
+        <div class="tf-menu">
+          <button class="tf-card" data-tf-go="#transfer-ovo">
+            <svg class="tf-ic" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="10" y="9" width="12" height="20" rx="2.5"/><path d="M14 25h4M2 14h6M5 11l-3 3 3 3M30 18h-6M27 15l3 3-3 3"/></svg>
+            Ke Sesama OVO
+            <svg class="tf-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+          </button>
+          <button class="tf-card" data-tf-go="#transfer-bank">
+            <svg class="tf-ic" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3L3 10h26zM6 13v10M13 13v10M19 13v10M26 13v10M4 26h24M2 29h28"/></svg>
+            Ke Rekening Bank
+            <svg class="tf-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+        <h2>Transaksi Terakhir</h2>
+        <div class="tf-empty">
+          <svg viewBox="0 0 250 170" fill="none" aria-hidden="true">
+            <ellipse cx="115" cy="95" rx="100" ry="70" fill="#f3f3f3"/>
+            <path d="M82 52q32-22 64-5" stroke="#9ad9d9" stroke-width="5" stroke-dasharray="8 8" stroke-linecap="round"/>
+            <rect x="70" y="64" width="98" height="88" rx="12" fill="#fff" stroke="#9ad9d9" stroke-width="5"/>
+            <path d="M168 88h20a10 10 0 010 38h-20" stroke="#9ad9d9" stroke-width="5"/>
+            <path d="M70 108H46a8 8 0 000 22h24" stroke="#9ad9d9" stroke-width="5"/>
+          </svg>
+          <p>Belum ada transaksi saat ini</p>
+        </div>
+      </div>
+      <div class="tf-pane" id="tf-tab-fav" role="tabpanel" hidden>
+        <div class="tf-empty tf-plain"><p>Belum ada favorit</p></div>
+      </div>
+    </section>
+
+    <section class="tf-screen" id="tf-s-ovo" aria-label="Ke Sesama OVO">
+      <header class="tf-appbar"><div class="tf-row"><button class="tf-back" data-tf-back aria-label="Kembali"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12H4M10 6l-6 6 6 6"/></svg></button><h1>Ke Sesama OVO</h1></div></header>
+      <form class="tf-form" data-tf-form="ovo" novalidate>
+        <div class="tf-contact">
+          <input class="tf-line" name="tujuan" type="text" placeholder="Masukkan nama atau nomor ponsel" autocomplete="off" aria-label="Nama atau nomor ponsel">
+          <button type="button" class="tf-pick" data-tf-contact aria-label="Pilih dari kontak"><svg viewBox="0 0 20 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="1" width="14" height="20" rx="1.8"/><circle cx="11" cy="8" r="2.4"/><path d="M7.5 16c.8-3 5.2-3 6 0M1 5h3M1 9h3M1 13h3M1 17h3"/></svg></button>
+        </div>
+        <div class="tf-src" style="--gap:4.6rem">
+          <span class="tf-lbl">Sumber Dana</span>
+          <div class="tf-srcbox"><div class="tf-av"><svg viewBox="0 0 24 24" fill="#5b2fd6"><path d="M5 9a5 5 0 015-5h4a5 5 0 015 5v6a5 5 0 01-5 5H8a3 3 0 01-3-3z"/><circle cx="11" cy="11" r="2.6" fill="#f4f2fd"/></svg></div><div><b>OVO Cash</b><small>Saldo <i data-tf-saldo>Rp0</i></small></div></div>
+        </div>
+        <div class="tf-nom"><span class="tf-lbl">Nominal Transfer</span><input name="nominal" inputmode="numeric" value="Rp0" autocomplete="off" aria-label="Nominal transfer"><div class="tf-err" data-tf-err role="alert"></div></div>
+        <input class="tf-line tf-msg" name="pesan" maxlength="25" placeholder="Pesan (opsional)" autocomplete="off" aria-label="Pesan">
+        <div class="tf-count"><span data-tf-count>0</span>/25</div>
+        <div class="tf-foot"><button class="tf-go tf-s" type="submit" disabled>Lanjutkan</button></div>
+      </form>
+    </section>
+
+    <section class="tf-screen" id="tf-s-bank" aria-label="Ke Rekening Bank">
+      <header class="tf-appbar"><div class="tf-row"><button class="tf-back" data-tf-back aria-label="Kembali"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12H4M10 6l-6 6 6 6"/></svg></button><h1>Ke Rekening Bank</h1></div></header>
+      <form class="tf-form" data-tf-form="bank" novalidate>
+        <div style="margin-top:2.9rem">
+          <label class="tf-lbl" for="tf-bank" style="margin:0 .35rem">Bank Tujuan</label>
+          <div class="tf-sel">
+            <select class="tf-line" id="tf-bank" name="bank">
+              <option value="" hidden>Pilih Bank</option>
+              <option>Bank Permata</option><option>BCA</option><option>BNI</option><option>BRI</option><option>Bank Mandiri</option><option>CIMB Niaga</option><option>Bank Syariah Indonesia</option><option>Bank Danamon</option>
+            </select>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
+          </div>
+        </div>
+        <input class="tf-line tf-rek" name="rekening" inputmode="numeric" maxlength="20" placeholder="Nomor Rekening" autocomplete="off" aria-label="Nomor rekening">
+        <div class="tf-src" style="--gap:3.4rem">
+          <span class="tf-lbl">Sumber Dana</span>
+          <div class="tf-srcbox"><div class="tf-av"><svg viewBox="0 0 24 24" fill="#5b2fd6"><path d="M5 9a5 5 0 015-5h4a5 5 0 015 5v6a5 5 0 01-5 5H8a3 3 0 01-3-3z"/><circle cx="11" cy="11" r="2.6" fill="#f4f2fd"/></svg></div><div><b>OVO Cash</b><small>Saldo <i data-tf-saldo>Rp0</i></small></div></div>
+        </div>
+        <div class="tf-nom"><span class="tf-lbl">Nominal Transfer</span><input name="nominal" inputmode="numeric" value="Rp0" autocomplete="off" aria-label="Nominal transfer"><div class="tf-err" data-tf-err role="alert"></div></div>
+        <input class="tf-line tf-msg" style="margin-top:5.5rem" name="pesan" maxlength="25" placeholder="Pesan (opsional)" autocomplete="off" aria-label="Pesan">
+        <div class="tf-count"><span data-tf-count>0</span>/25</div>
+        <div class="tf-foot"><button class="tf-go tf-b" type="submit" disabled>Lanjutkan</button></div>
+      </form>
+    </section>
+
+    <div class="tf-toast" id="tf-toast" role="status"></div>
+  </div>
+
 
 
  <div id="tdet" role="dialog" aria-label="Detail Top Up" aria-hidden="true" class="loading">
@@ -934,7 +1098,7 @@ function fromOx(rows){
     const d=wibDate(r.waktu);let g=map.get(d.key);
     if(!g){g={key:d.key,date:d.label,items:[]};map.set(d.key,g)}
     const kode=r.kode;
-    if(r.biaya>0)g.items.push({title:'OVO',sub:'Biaya Top Up',type:'out',amount:r.biaya,kode});
+    if(r.biaya>0)g.items.push({title:'OVO',sub:'Biaya Top Up',type:'out',amount:r.biaya});
     g.items.push({title:r.bank,sub:'Top Up',type:'in',amount:(Number(r.nominal)||0)+(Number(r.biaya)||0),kode});
   });
   return [...map.values()];
@@ -1502,6 +1666,108 @@ if(location.hash==='#history')openHist(true);
       ready = true;
     }, reduce ? 0 : SWIPE_MS + 30);
   }, SPLASH_HOLD_MS);
+})();
+</script>
+
+<script>
+(function(){
+  var root=document.getElementById('tf'),trigger=document.getElementById('btn-transfer');
+  if(!root||!trigger)return;
+  /* Demo saldo: tambahkan ?saldo=500000 pada URL untuk mencoba saat saldo cukup. */
+  var SALDO=parseInt(new URLSearchParams(location.search).get('saldo')||'0',10)||0,MIN=10000;
+  var rp=function(n){return 'Rp'+Number(n).toLocaleString('id-ID')};
+  var routes={'#transfer':'tf-s-transfer','#transfer-ovo':'tf-s-ovo','#transfer-bank':'tf-s-bank'};
+  var ids=['tf-s-transfer','tf-s-ovo','tf-s-bank'];
+  var meta=document.querySelector('meta[name="theme-color"]'),oldTheme=null,isOpen=false,tt;
+  var toastEl=document.getElementById('tf-toast');
+  var q=function(s,r){return (r||root).querySelector(s)},qa=function(s,r){return (r||root).querySelectorAll(s)};
+
+  function toast(m){toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){toastEl.classList.remove('show')},2200)}
+
+  function resetAll(){
+    qa('form[data-tf-form]').forEach(function(f){
+      f.reset();
+      q('[data-tf-err]',f).textContent='';
+      q('[data-tf-count]',f).textContent='0';
+      q('.tf-go',f).disabled=true;
+    });
+    qa('[data-tf-tab]').forEach(function(b){b.setAttribute('aria-selected',b.dataset.tfTab==='baru'?'true':'false')});
+    q('#tf-tab-baru').hidden=false;q('#tf-tab-fav').hidden=true;
+  }
+  function openUI(){
+    isOpen=true;
+    root.classList.remove('tf-ready');root.classList.add('open');root.setAttribute('aria-hidden','false');
+    oldTheme=meta?meta.content:null;if(meta)meta.content='#3c1a98';
+    requestAnimationFrame(function(){requestAnimationFrame(function(){root.classList.add('tf-ready')})});
+  }
+  function closeUI(){
+    if(!isOpen)return;isOpen=false;
+    root.classList.remove('open','tf-ready');root.setAttribute('aria-hidden','true');
+    if(meta)meta.content=window.__tabTheme?window.__tabTheme():oldTheme;
+    resetAll();
+  }
+  function show(){
+    var cur=routes[location.hash];
+    if(!cur){closeUI();return}
+    if(!isOpen)openUI();
+    ids.forEach(function(id){
+      var el=document.getElementById(id),on=id===cur;
+      el.classList.toggle('active',on);
+      el.classList.toggle('behind',id==='tf-s-transfer'&&!on);
+      if(on)el.removeAttribute('inert');else el.setAttribute('inert','');
+    });
+  }
+  function go(h){
+    try{history.pushState({tf:1},'',h)}catch(e){location.hash=h}
+    show();
+  }
+  function back(){
+    if(history.state&&history.state.tf){history.back();return}
+    try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}
+    show();
+  }
+
+  trigger.addEventListener('click',function(){go('#transfer')});
+  window.addEventListener('popstate',show);
+  qa('[data-tf-back]').forEach(function(b){b.addEventListener('click',back)});
+  qa('[data-tf-go]').forEach(function(b){b.addEventListener('click',function(){go(b.dataset.tfGo)})});
+  qa('[data-tf-saldo]').forEach(function(e){e.textContent=rp(SALDO)});
+  q('[data-tf-contact]').addEventListener('click',function(){toast('Daftar kontak dibuka di aplikasi native')});
+
+  var tabs=qa('[data-tf-tab]');
+  tabs.forEach(function(b){
+    b.addEventListener('click',function(){
+      tabs.forEach(function(x){x.setAttribute('aria-selected',x===b?'true':'false')});
+      q('#tf-tab-baru').hidden=b.dataset.tfTab!=='baru';
+      q('#tf-tab-fav').hidden=b.dataset.tfTab!=='fav';
+    });
+  });
+
+  qa('form[data-tf-form]').forEach(function(f){
+    var type=f.dataset.tfForm,btn=q('.tf-go',f),err=q('[data-tf-err]',f);
+    var nom=f.elements.nominal,pesan=f.elements.pesan,cnt=q('[data-tf-count]',f);
+    function amount(){return parseInt((nom.value||'').replace(/\D/g,'').slice(0,9)||'0',10)}
+    function check(){
+      var a=amount(),ok=a>=MIN,short=a>SALDO;
+      if(type==='ovo')ok=ok&&f.elements.tujuan.value.trim().length>=3;
+      else ok=ok&&!!f.elements.bank.value&&f.elements.rekening.value.length>=6;
+      err.textContent=a===0?'':(short?'Saldo OVO Cash tidak cukup':(a<MIN?'Minimal transfer '+rp(MIN):''));
+      btn.disabled=!(ok&&!short);
+    }
+    function caretEnd(){var n=nom.value.length;try{nom.setSelectionRange(n,n)}catch(e){}}
+    nom.addEventListener('input',function(){nom.value=rp(amount());caretEnd();check()});
+    nom.addEventListener('focus',function(){setTimeout(caretEnd,0)});
+    pesan.addEventListener('input',function(){cnt.textContent=pesan.value.length});
+    if(type==='bank')f.elements.rekening.addEventListener('input',function(){this.value=this.value.replace(/\D/g,'')});
+    f.addEventListener('input',check);
+    f.addEventListener('change',check);
+    f.addEventListener('submit',function(e){
+      e.preventDefault();
+      if(!btn.disabled)toast('Lanjut ke halaman konfirmasi ('+rp(amount())+')');
+    });
+  });
+
+  show(); /* buka langsung jika URL berisi #transfer... */
 })();
 </script>
 </body>

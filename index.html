@@ -545,6 +545,8 @@ button,[role="button"],.row,.it,.ni{touch-action:manipulation}
 
 /* ===== Lock screen: splash OVO -> Security Code (semua di-scope ke #lg) ===== */
 html.lg-lock, html.lg-lock body{background:#4326b9!important;overflow:hidden}
+/* Bar navigasi perangkat (area bawah) selalu hitam */
+body::after{content:"";position:fixed;left:0;right:0;bottom:0;height:env(safe-area-inset-bottom,0px);background:#000;pointer-events:none;z-index:2147483647}
 html.lg-lock body > :not(#lg){visibility:hidden}
 #lg{position:fixed;inset:0;z-index:2147483000;background:#1c1646;overflow:hidden;color:#fff;
   font-family:"DM Sans","Poppins","Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:16px;line-height:normal;

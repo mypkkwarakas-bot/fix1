@@ -1257,6 +1257,7 @@ if(location.hash==='#history')openHist(true);
     meta.content=t==='home'?HOME_THEME:'#ffffff';
     if(window.__closeLoyalty)window.__closeLoyalty();
     if(window.__closeEp)window.__closeEp();
+    if(p&&window.__pfLoad)window.__pfLoad();
     if(p){ps.scrollTop=0;ph.classList.remove('on')}else closeSheet();
     if(window.__onTab)window.__onTab(t);
   }
@@ -1284,6 +1285,30 @@ if(location.hash==='#history')openHist(true);
   /* ---- halaman Ubah Profil ---- */
   var ep=$('ep'),epN=$('ep-name'),epSave=$('ep-save');
   var dPhone='',dMail='',cMail='hermawananggraeny@gmail.com';
+  /* ---- Backend: Supabase "anubis", tabel my_profile lewat RPC get_my_profile / save_my_profile ---- */
+  var PFU='https://jtdnsrsollmknfijdqty.supabase.co',PFK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp0ZG5zcnNvbGxta25maWpkcXR5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0OTIxMDAsImV4cCI6MjEwODA2ODEwMH0.snpF-wdt0XhwodmfQuW7J-uaG9GV-Q0fDJVoxJImcNE';
+  function pfCall(fn,body){
+    var ctl=window.AbortController?new AbortController():null,tm=setTimeout(function(){if(ctl)ctl.abort()},12000);
+    return fetch(PFU+'/rest/v1/rpc/'+fn,{method:'POST',signal:ctl?ctl.signal:undefined,
+      headers:{'apikey':PFK,'Authorization':'Bearer '+PFK,'Content-Type':'application/json'},body:JSON.stringify(body||{})})
+    .then(function(r){return r.json().catch(function(){return null}).then(function(j){
+      clearTimeout(tm);
+      if(!r.ok){var e=new Error((j&&j.message)||'Gagal');e.code=j&&j.code;throw e}
+      return j})},function(e){clearTimeout(tm);throw e});
+  }
+  function pfApply(d){
+    if(!d)return;
+    if(d.nama)$('pname').textContent=d.nama;
+    if(d.nomor_hp)$('pphone').textContent=d.nomor_hp;
+    if(d.email)cMail=d.email;
+  }
+  var pfT=0;
+  function pfLoad(force){
+    var n=Date.now();if(!force&&n-pfT<15000)return;pfT=n;
+    pfCall('get_my_profile').then(pfApply).catch(function(){});
+  }
+  window.__pfLoad=pfLoad;
+  pfLoad(true);
   function epDirty(){
     var n=epN.value.trim();
     epSave.disabled=!n||(n===$('pname').textContent&&dPhone===$('pphone').textContent&&dMail===cMail);
@@ -1321,8 +1346,13 @@ if(location.hash==='#history')openHist(true);
   epSave.addEventListener('click',function(){
     var n=epN.value.trim();
     if(!n){$('ep-ename').textContent='Nama wajib diisi';return}
-    $('pname').textContent=n;$('pphone').textContent=dPhone;cMail=dMail;
-    epClose();say('Profil berhasil diperbarui');
+    epSave.disabled=true;
+    pfCall('save_my_profile',{p_nama:n,p_nomor_hp:dPhone,p_email:dMail}).then(function(d){
+      pfApply(d);epClose();say('Profil berhasil diperbarui');
+    }).catch(function(e){
+      epDirty();
+      say(e&&e.code==='P0001'?e.message:'Gagal menyimpan, periksa koneksi lalu coba lagi');
+    });
   });
   $('so').addEventListener('click',function(){
     openSheet('<h3>Keluar dari OVO?</h3><p class="d">Kamu perlu masuk lagi untuk memakai akun ini.</p><div class="btns"><button class="btn o" data-close>Batal</button><button class="btn" id="so-ok">Sign Out</button></div>',true);
@@ -1487,12 +1517,31 @@ if(location.hash==='#history')openHist(true);
   var sc=document.createElement('script');
   sc.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js';
   sc.onload=function(){try{
-    var c=window.supabase.createClient(URL_,KEY);
+    var c=window.supabase.createClient(URL_,KEY);window.__sb=c;
     c.channel('saldo-o').on('postgres_changes',{event:'*',schema:'public',table:'O'},function(p){
       if(p.new&&p.new.amount_rupiah!=null)show(p.new.amount_rupiah);else load();
     }).subscribe();
   }catch(e){}};
   document.head.appendChild(sc);
+})();
+</script>
+<script>
+/* Profil live: perubahan di tabel my_profile (server) langsung tampil tanpa interaksi & tanpa notifikasi.
+   Realtime = broadcast "my_profile" (event "ubah"); polling 5 dtk jadi cadangan. */
+(function(){
+  function load(){if(window.__pfLoad)window.__pfLoad(true)}
+  setInterval(function(){if(!document.hidden)load()},5000);
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)load()});
+  window.addEventListener('focus',load);
+  window.addEventListener('pageshow',load);
+  window.addEventListener('online',load);
+  var tries=0,tm=setInterval(function(){
+    tries++;
+    if(window.__sb){
+      clearInterval(tm);
+      try{window.__sb.channel('my_profile').on('broadcast',{event:'ubah'},load).subscribe()}catch(e){}
+    }else if(tries>60)clearInterval(tm);
+  },500);
 })();
 </script>
 <script>

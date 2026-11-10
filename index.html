@@ -1296,11 +1296,23 @@ if(location.hash==='#history')openHist(true);
       if(!r.ok){var e=new Error((j&&j.message)||'Gagal');e.code=j&&j.code;throw e}
       return j})},function(e){clearTimeout(tm);throw e});
   }
+  /* srv = nilai server terakhir yang ditampilkan. Saat halaman Ubah Profil terbuka, kolom yang belum
+     diedit pengguna (masih sama dengan srv) ikut berubah live; kolom yang sedang diedit tidak ditimpa. */
+  var srv={n:$('pname').textContent,p:$('pphone').textContent,m:cMail};
   function pfApply(d){
-    if(!d)return;
-    if(d.nama)$('pname').textContent=d.nama;
-    if(d.nomor_hp)$('pphone').textContent=d.nomor_hp;
-    if(d.email)cMail=d.email;
+    if(!d||typeof d!=='object')return;
+    var n='nama' in d&&d.nama!=null?String(d.nama):srv.n,
+        p='nomor_hp' in d?String(d.nomor_hp==null?'':d.nomor_hp):srv.p,
+        m='email' in d?String(d.email==null?'':d.email):srv.m;
+    var open=ep.classList.contains('on');
+    if(open){
+      if(epN.value===srv.n)epN.value=n;
+      if(dPhone===srv.p)dPhone=p;
+      if(dMail===srv.m)dMail=m;
+    }
+    $('pname').textContent=n;$('pphone').textContent=p;cMail=m;
+    srv={n:n,p:p,m:m};
+    if(open)epRender();
   }
   var pfT=0;
   function pfLoad(force){
@@ -1539,8 +1551,8 @@ if(location.hash==='#history')openHist(true);
     tries++;
     if(window.__sb){
       clearInterval(tm);
-      try{window.__sb.channel('my_profile').on('broadcast',{event:'ubah'},load).subscribe()}catch(e){}
-    }else if(tries>60)clearInterval(tm);
+      try{window.__sb.channel('my_profile').on('broadcast',{event:'ubah'},function(){load()}).subscribe(function(s){if(s==='SUBSCRIBED')load()})}catch(e){}
+    }else if(tries>600)clearInterval(tm);
   },500);
 })();
 </script>

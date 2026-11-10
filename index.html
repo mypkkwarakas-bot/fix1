@@ -1738,6 +1738,8 @@ if(location.hash==='#history')openHist(true);
   var SPLASH_HOLD_MS = 1000;        // lama splash tampil sebelum swipe
   var SWIPE_MS = 220;               // durasi swipe splash -> security code
   var UNLOCK_MS = 260;              // durasi swipe security code -> beranda
+  var INACTIVITY_MS = 3 * 60 * 1000; // kunci ulang setelah 3 menit tanpa interaksi
+  var inactivityTimer = null, lastActivity = 0;
 
   var root = document.getElementById("lg");
   if (!root) return;
@@ -1758,6 +1760,14 @@ if(location.hash==='#history')openHist(true);
   main.forEach(function (el) { el.inert = true; });
 
   var code = "", locked = false, ready = false, opened = false;
+  var SESSION_KEY = "ovo_demo_unlocked_at";
+  var savedActivity = 0;
+
+  // Pulihkan status terbuka setelah refresh selama sesi belum melewati batas inaktivitas.
+  try {
+    savedActivity = Number(sessionStorage.getItem(SESSION_KEY)) || 0;
+  } catch (e) {}
+
   app.style.setProperty("--swipe-ms", SWIPE_MS + "ms");
   page.setAttribute("aria-hidden", "true");
   page.inert = true;
@@ -1801,12 +1811,53 @@ if(location.hash==='#history')openHist(true);
 
   function unlock() {
     opened = true;
+    lastActivity = Date.now();
+    try { sessionStorage.setItem(SESSION_KEY, String(lastActivity)); } catch (e) {}
     document.removeEventListener("keydown", onKey);
     html.classList.remove("lg-lock");
     main.forEach(function (el) { el.inert = false; });
     if (meta && origTheme !== null) meta.content = origTheme;
     root.classList.add("lg-unlock");
-    setTimeout(function () { root.remove(); }, reduce ? 0 : UNLOCK_MS + 40);
+    setTimeout(function () {
+      root.style.display = "none";
+      startInactivityWatch();
+    }, reduce ? 0 : UNLOCK_MS + 40);
+  }
+
+  function startInactivityWatch() {
+    lastActivity = Date.now();
+    clearInterval(inactivityTimer);
+    inactivityTimer = setInterval(function () {
+      if (opened && Date.now() - lastActivity >= INACTIVITY_MS) lockAgain();
+    }, 1000);
+  }
+
+  function noteActivity() {
+    if (opened) {
+      lastActivity = Date.now();
+      try { sessionStorage.setItem(SESSION_KEY, String(lastActivity)); } catch (e) {}
+    }
+  }
+
+  function lockAgain() {
+    if (!opened) return;
+    opened = false;
+    try { sessionStorage.removeItem(SESSION_KEY); } catch (e) {}
+    ready = true;
+    locked = false;
+    code = "";
+    render();
+    clearInterval(inactivityTimer);
+    main.forEach(function (el) { el.inert = true; });
+    html.classList.add("lg-lock");
+    if (meta) meta.content = "#5827d8";
+    root.style.display = "block";
+    root.classList.remove("lg-unlock");
+    app.classList.add("lg-go");
+    splash.classList.add("lg-done");
+    page.removeAttribute("aria-hidden");
+    page.inert = false;
+    document.addEventListener("keydown", onKey);
   }
 
   function onKey(e) {
@@ -1819,17 +1870,39 @@ if(location.hash==='#history')openHist(true);
     if (btn) press(btn.dataset.k);
   });
   document.addEventListener("keydown", onKey);
+  ["pointerdown", "touchstart", "click", "keydown", "input", "scroll"].forEach(function (type) {
+    document.addEventListener(type, noteActivity, { passive: true, capture: true });
+  });
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible" && opened && Date.now() - lastActivity >= INACTIVITY_MS) lockAgain();
+  });
 
-  // splash tahan 1 detik, lalu swipe otomatis ke halaman Security Code
-  setTimeout(function () {
-    app.classList.add("lg-go");
+  // Jika halaman di-refresh dalam sesi aktif, langsung pulihkan beranda tanpa login ulang.
+  if (savedActivity && Date.now() - savedActivity < INACTIVITY_MS) {
+    opened = true;
+    ready = true;
+    lastActivity = savedActivity;
+    html.classList.remove("lg-lock");
+    main.forEach(function (el) { el.inert = false; });
+    page.removeAttribute("aria-hidden");
+    page.inert = false;
+    root.style.display = "none";
+    if (meta && origTheme !== null) meta.content = origTheme;
+    startInactivityWatch();
+  } else {
+    try { sessionStorage.removeItem(SESSION_KEY); } catch (e) {}
+
+    // Splash tahan 1 detik, lalu swipe otomatis ke halaman Security Code.
     setTimeout(function () {
-      splash.classList.add("lg-done");
-      page.removeAttribute("aria-hidden");
-      page.inert = false;
-      ready = true;
-    }, reduce ? 0 : SWIPE_MS + 30);
-  }, SPLASH_HOLD_MS);
+      app.classList.add("lg-go");
+      setTimeout(function () {
+        splash.classList.add("lg-done");
+        page.removeAttribute("aria-hidden");
+        page.inert = false;
+        ready = true;
+      }, reduce ? 0 : SWIPE_MS + 30);
+    }, SPLASH_HOLD_MS);
+  }
 })();
 </script>
 

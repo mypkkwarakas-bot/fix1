@@ -1131,6 +1131,7 @@ html.lg-lock body > :not(#lg){visibility:hidden}
   </div>
  </div>
  <div class="toast" id="toast"></div>
+ <div id="sub" aria-hidden="true"></div>
 </div>
 
 <script>
@@ -2240,6 +2241,105 @@ if(location.hash==='#history')openHist(true);
   });
 
   show(); /* buka langsung jika URL berisi #transfer... */
+})();
+</script>
+<script>
+/* ===== Halaman alur tab Profile (S&K, Panduan, Ubah Security Code, Pusat Bantuan, Aplikasi Terhubung, OVO Stamp, Points, Premier) ===== */
+
+(function(){
+  var host=document.getElementById('sub');if(!host||!host.attachShadow)return;
+  var st=document.createElement('style');st.textContent='#sub{display:none;position:absolute;inset:0;z-index:40}#sub.on{display:block}';document.head.appendChild(st);
+  var root=host.attachShadow({mode:'open'});
+  var PAGES={"Syarat dan Ketentuan": "<div class=\"bar ungu\"><button class=\"bk\" data-close aria-label=\"Kembali\">←<\/button>Syarat &amp; Ketentuan<\/div>\n <div class=\"body tnc\">\n  <div class=\"lang\"><button class=\"on\">Bahasa Indonesia<\/button><button>English<\/button><\/div>\n  <h1 class=\"sel\">Selamat datang di Aplikasi OVO!<\/h1>\n  <p>Terima kasih telah mengunduh Aplikasi OVO.<\/p>\n  <p>Syarat dan ketentuan ini mengatur ketentuan-ketentuan mengenai; pendaftaran untuk menjadi pengguna layanan Kami (PT Visionet Internasional), penyediaan layanan uang elektronik Kami, dan hal-hal lainnya yang berkaitan dengan Aplikasi OVO. Untuk kejelasan dan kepastian, Syarat dan Ketentuan ini berlaku sebagai perjanjian antara Anda dan Kami (<b>\"Syarat dan Ketentuan\"<\/b>).<\/p>\n  <h3>PERSETUJUAN<\/h3>\n  <p>Dengan mengunduh, mengakses, melakukan pendaftaran untuk menjadi pengguna layanan Kami, menggunakan Aplikasi OVO, atau menggunakan layanan-layanan Kami berarti Anda menyatakan dan mengakui bahwa Anda telah membaca, mempelajari, memahami, dan menyetujui seluruh ketentuan-ketentuan yang diatur dalam Syarat dan Ketentuan ini. Syarat dan Ketentuan ini juga berlaku atas penggunaan layanan-layanan uang elektronik Kami melalui website dan/atau aplikasi pihak ketiga.<\/p>\n   <h3>DEFINISI<\/h3>\n  <p>Kecuali ditentukan lain secara tegas dalam Syarat dan Ketentuan ini, istilah-istilah yang diawali dengan huruf besar dalam Syarat dan Ketentuan ini memiliki pengertian-pengertian sebagai berikut:<\/p>\n  <ol>\n   <li><b>\"Anda\"<\/b> adalah pihak yang merupakan Pengguna OVO ataupun pihak yang sedang melakukan pendaftaran untuk menjadi Pengguna OVO.<\/li>\n   <li><b>\"Aplikasi OVO\"<\/b> adalah <i>mobile application<\/i> yang dikelola oleh Kami (PT Visionet Internasional).<\/li>\n  <\/ol>\n <\/div>", "Panduan OVO": "<div class=\"bar ungu\" style=\"text-transform:none\"><button class=\"bk\" data-close aria-label=\"Kembali\">←<\/button>Panduan OVO<\/div>\n <div class=\"body\">\n  <h2 class=\"c\" style=\"margin:6px 0 22px;font-size:21px\">Pakai OVO semua jadi makin mudah<\/h2>\n  <div class=\"acc\"><button><i>+<\/i>Cara Top Up OVO<\/button><div>Buka OVO, pilih Top Up, pilih metode (ATM, m-banking, atau minimarket), lalu ikuti instruksi pembayaran.<\/div><\/div>\n  <div class=\"acc\"><button><i>+<\/i>Cara Bayar Pakai OVO<\/button><div>Pilih Bayar, pindai kode QR merchant, masukkan nominal, lalu konfirmasi dengan Security Code.<\/div><\/div>\n  <div class=\"acc\"><button><i>+<\/i>Cara Transfer Pakai OVO<\/button><div>Pilih Transfer, masukkan nomor tujuan atau pilih kontak, isi nominal, lalu konfirmasi.<\/div><\/div>\n <\/div>", "Ubah Security Code": "<div class=\"bar ungu\"><button class=\"bk\" data-close aria-label=\"Kembali\">←<\/button>Ubah Security Code<\/div>\n <div class=\"body c\" style=\"padding-top:36px\">\n  <h3 id=\"pin-t\" style=\"color:var(--ungu);font-size:18px;margin-bottom:14px\">Masukkan Security Code Anda saat ini<\/h3>\n  <p id=\"pin-d\" style=\"line-height:1.5\">Security Code digunakan untuk masuk ke akun Anda dan bertransaksi<\/p>\n  <div class=\"pin\" id=\"pin\"><\/div>\n <\/div>\n <div class=\"keys\" id=\"keys\"><\/div>", "Pusat Bantuan": "<div class=\"bar\" style=\"background:#fff\"><button class=\"bk\" data-close aria-label=\"Kembali\">←<\/button>Pusat Bantuan<\/div>\n <div class=\"body\" style=\"padding-top:6px\">\n  <label class=\"search\"><span>🔍<\/span><input id=\"cari\" placeholder=\"Cari Kata Kunci\"><\/label>\n  <div id=\"menu\"><\/div>\n <\/div>", "Aplikasi Terhubung": "<div class=\"bar\" style=\"background:#fff\"><button class=\"bk\" data-close aria-label=\"Kembali\">←<\/button>Aplikasi Terhubung<\/div>\n <div class=\"body abu empty\">\n  <div class=\"art\" style=\"background:#47278a;border-radius:70px 40px 70px 40px\">🧑‍💻<\/div>\n  <h2>Belum ada aplikasi terhubung<\/h2>\n  <p>Transaksi makin mudah dengan menghubungkan OVO kamu di apps lain.<\/p>\n <\/div>", "OVO Stamp": "<div class=\"bar\" style=\"background:#fff\"><button class=\"bk\" data-close aria-label=\"Kembali\">←<\/button>OVO Stamp<\/div>\n <div class=\"tabs\" data-t=\"stamp\"><button class=\"on\">Aktif<\/button><button>Tidak Aktif<\/button><\/div>\n <div class=\"body abu empty\">\n  <div class=\"art\" style=\"background:#ffe7b3\">🪴<\/div>\n  <h2>Wah, belum ada misi nih<\/h2>\n  <p>Tenang, misi kamu lagi disiapin. Kamu bisa balik lagi nanti ya!<\/p>\n <\/div>", "OVO Points": "<div class=\"bar\" style=\"background:#fff\"><button class=\"bk\" data-close aria-label=\"Kembali\">←<\/button>OVO Points<\/div>\n <div class=\"pts\"><b>0<\/b><small>Setara Rp<strong>0<\/strong><\/small><\/div>\n <div class=\"tabs\" data-t=\"poin\"><button class=\"on\">Didapat<\/button><button>Terpakai<\/button><\/div>\n <div class=\"body empty\">\n  <div class=\"art\" style=\"background:#ffe7b3\">🤔<\/div>\n  <h2>Kamu belum punya OVO Point<\/h2>\n  <p>Makin untung dengan OVO Point! Dapatkan point saat bertransaksi yang dapat digunakan lagi di banyak merchant OVO.<\/p>\n <\/div>", "OVO Premier": "<div class=\"bar\" style=\"background:#fff\"><button class=\"bk\" data-close aria-label=\"Kembali\">✕<\/button>OVO Premier<\/div>\n <div class=\"body\" style=\"padding-top:0\">\n  <div class=\"hero\">🔒<\/div>\n  <h2 style=\"font-size:23px\">Upgrade ke OVO Premier, yuk!<\/h2>\n  <p style=\"color:#888;margin-top:6px\">Nikmati akses lengkap semua layanan OVO<\/p>\n  <div class=\"ver\"><span style=\"font-size:40px\">🪪<\/span><div><b>Verifikasi data kamu<\/b><small>Cukup ambil foto KTP dan selfie<\/small><\/div><\/div>\n  <h3 style=\"font-size:20px;margin-bottom:14px\">Keuntungan upgrade ke OVO Premier<\/h3>\n  <p style=\"font-size:20px;font-weight:700\">💸 Kirim uang dengan mudah<\/p>\n  <div style=\"height:90px\"><\/div>\n <\/div>\n <div class=\"sheet\">\n  Dengan melakukan verifikasi data, saya menyatakan menyetujui <a href=\"#\" data-go=\"Syarat dan Ketentuan\">Ketentuan Layanan<\/a> dan <a href=\"#\">Kebijakan Privasi<\/a> OVO. Dan menyatakan bahwa saya menggunakan akun OVO ini sepenuhnya untuk kepentingan pribadi dan tidak mewakili atau untuk kepentingan pihak lain.\n  <button class=\"btn\">Mulai Verifikasi<\/button>\n <\/div>"};
+  var STYLE="\n:host{--ungu:#3f1d98;--ungu2:#4c2a85;--aksen:#5b25d8;--teal:#12b5b5;--teks:#2a2540;--abu:#f4f4f4;--abu2:#666;--garis:#e3e3e3}\n*{box-sizing:border-box;margin:0}\n\n.screen{display:none;flex-direction:column;height:100%}\n.screen.on{display:flex}\n.bar{display:flex;align-items:center;gap:22px;padding:0 16px;height:58px;flex:none;font-weight:700;font-size:17px}\n.bar.ungu{background:var(--ungu);color:#fff;text-transform:uppercase;font-size:16px}\n.bar .bk{font-size:24px;cursor:pointer;background:none;border:0;color:inherit}\n.body{flex:1;overflow:auto;padding:20px 18px}\n.abu{background:var(--abu)}\n.c{text-align:center}\nh1.sel{font-family:\"Roboto Slab\",Georgia,serif;font-weight:400;font-size:28px;color:var(--ungu2);margin:16px 0 22px}\n.tnc p,.tnc li{line-height:1.65;text-align:justify;font-size:15px;margin-bottom:14px}\n.tnc h3{color:var(--ungu2);text-align:center;margin:18px 0 12px;font-size:18px}\n.tnc ol{padding-left:24px}\n.lang{display:flex;justify-content:flex-end;gap:8px;margin-bottom:4px}\n.lang button{border:0;background:none;color:var(--ungu2);padding:12px 16px;font-size:16px;cursor:pointer}\n.lang button.on{background:var(--ungu2);color:#fff}\n.acc{border-bottom:1px solid var(--garis)}\n.acc button{display:flex;align-items:center;gap:14px;width:100%;background:none;border:0;padding:18px 8px;font-size:17px;color:var(--teks);cursor:pointer;text-align:left}\n.acc i{width:26px;height:26px;border:2px solid var(--teal);border-radius:7px;color:var(--teal);display:grid;place-items:center;font-style:normal;font-weight:700;font-size:20px;line-height:1}\n.acc div{display:none;padding:0 8px 16px 48px;color:var(--abu2);line-height:1.5;font-size:14px}\n.acc.on div{display:block}\n.pin{display:flex;gap:30px;justify-content:center;margin:70px 0 0}\n.pin span{width:30px;height:28px;border-bottom:2px solid #6b7280;text-align:center;font-size:24px}\n.pin span.cur{border-color:#2f7fe0}\n.keys{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:#111;padding:8px;flex:none}\n.keys button{background:#2d2d2d;color:#fff;border:0;border-radius:8px;height:50px;font-size:22px;cursor:pointer}\n.keys small{font-size:11px;color:#aaa;margin-left:8px}\n.search{display:flex;align-items:center;gap:12px;background:#f3f3f3;border-radius:12px;padding:0 16px;height:48px;margin-bottom:6px}\n.search input{border:0;background:none;flex:1;font-size:16px;outline:none}\n.row{display:flex;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid var(--garis);cursor:pointer}\n.row .ic{width:30px;height:30px;border-radius:50%;background:#ece7fb;display:grid;place-items:center;color:var(--aksen);font-size:15px;flex:none}\n.row span.t{flex:1}.row b{color:#5b4e8a}\n.empty{text-align:center;padding:10px 22px}\n.empty .art{width:100%;height:190px;border-radius:50px 50px 40px 40px;display:grid;place-items:center;font-size:84px;margin:28px 0 24px}\n.empty h2{font-size:20px;margin-bottom:10px}\n.empty p{color:var(--abu2);line-height:1.5}\n.tabs{display:flex;background:#fff;flex:none}\n.tabs button{flex:1;padding:16px;background:none;border:0;border-bottom:3px solid transparent;font-weight:700;font-size:16px;color:#a0a0a0;cursor:pointer}\n.tabs button.on{color:var(--aksen);border-color:var(--aksen)}\n.pts{background:linear-gradient(#fff,#f3f3f3);text-align:center;padding:36px 0 60px;flex:none}\n.pts b{font-size:50px;display:block}.pts small{color:#888}\n.hero{height:300px;margin:0 0 20px;background:#47278a;position:relative;display:grid;place-items:center;font-size:96px}\n.hero:after{content:\"\";position:absolute;inset:auto 0 0 0;height:60px;background:#7b4fe0;border-radius:60% 40% 0 0}\n.ver{display:flex;align-items:center;gap:16px;border:1px solid #ddd;border-radius:8px;padding:18px 14px;margin:18px 0}\n.ver b{display:block;font-size:19px}.ver small{color:#888;font-size:15px}\n.sheet{background:#fff;border-radius:24px 24px 0 0;padding:18px 20px;box-shadow:0 -4px 14px #0001;flex:none;font-size:14px;color:#666;line-height:1.5}\n.sheet a{color:#0000e0;font-weight:700}\n.btn{display:block;width:100%;background:var(--aksen);color:#fff;border:0;border-radius:30px;height:54px;font-size:18px;font-weight:700;margin-top:14px;cursor:pointer}\n\n\n:host{all:initial;position:absolute;inset:0;z-index:40;display:none;font-family:\"Plus Jakarta Sans\",\"Nunito Sans\",\"Segoe UI\",system-ui,sans-serif;color:#2a2540;font-size:16px;\n --ungu:#3f1d98;--ungu2:#4c2a85;--aksen:#5b25d8;--teal:#12b5b5;--teks:#2a2540;--abu:#f4f4f4;--abu2:#666;--garis:#e3e3e3}\n:host(.on){display:block}\n.hp{position:absolute;inset:0;background:#fff;display:flex;flex-direction:column;animation:spIn .22s ease-out}\n@keyframes spIn{from{transform:translateX(24px);opacity:0}to{transform:none;opacity:1}}\n@media (prefers-reduced-motion:reduce){.hp{animation:none}}\n.screen{display:flex;flex-direction:column;height:100%;min-height:0}\n.bar{padding-top:env(safe-area-inset-top,0px);height:calc(58px + env(safe-area-inset-top,0px))}\n.bk{background:none;border:0;color:inherit;font:inherit;font-size:24px;cursor:pointer;padding:8px;margin:-8px;text-decoration:none}\n.body{min-height:0}\n.keys{padding-bottom:calc(8px + env(safe-area-inset-bottom,0px))}\n.sheet{padding-bottom:calc(18px + env(safe-area-inset-bottom,0px))}\n.acc button,.keys button,.btn,.tabs button,.lang button{font-family:inherit}\n.pin span.f{border-color:#2f7fe0}\n.pin.sh{animation:spSh .4s}\n@keyframes spSh{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}\n.toast{position:absolute;left:50%;top:calc(76px + env(safe-area-inset-top,0px));transform:translateX(-50%) translateY(-10px);background:#26233a;color:#fff;padding:9px 18px;border-radius:20px;font-size:13px;opacity:0;pointer-events:none;transition:.25s;white-space:nowrap;max-width:90%;overflow:hidden;text-overflow:ellipsis}\n.toast.show{opacity:1;transform:translateX(-50%)}\n.row{font-family:inherit;width:100%;background:none;border-left:0;border-right:0;border-top:0;font-size:16px;color:inherit;text-align:left}\n";
+  var PIN_OK='808090';
+  var meta=document.querySelector('meta[name="theme-color"]'),cur=null,tt;
+  var PURPLE={'Syarat dan Ketentuan':1,'Ubah Security Code':1};
+  function g(id){return root.getElementById(id)}
+  function say(m){var t=g('sp-toast');if(!t)return;t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){t.classList.remove('show')},1500)}
+  function q(s){return [].slice.call(root.querySelectorAll(s))}
+  function open(name){
+    if(!PAGES[name])return false;
+    cur=name;
+    root.innerHTML='<style>'+STYLE+'</style><div class="hp"><section class="screen on">'+PAGES[name]+'</section><div class="toast" id="sp-toast" role="status"></div></div>';
+    host.classList.add('on');host.setAttribute('aria-hidden','false');
+    if(meta)meta.content=PURPLE[name]?'#3f1d98':'#ffffff';
+    init(name);
+    var b=root.querySelector('.body');if(b)b.scrollTop=0;
+    return true;
+  }
+  function close(){
+    if(!cur)return;cur=null;
+    host.classList.remove('on');host.setAttribute('aria-hidden','true');root.innerHTML='';
+    if(meta)meta.content=window.__tabTheme?window.__tabTheme():'#ffffff';
+  }
+  window.__openSub=open;window.__closeSub=close;
+  root.addEventListener('click',function(e){
+    var t=e.target;
+    var c=t.closest&&t.closest('[data-close]');if(c){e.preventDefault();close();return}
+    var go=t.closest&&t.closest('[data-go]');if(go){e.preventDefault();open(go.getAttribute('data-go'))}
+  });
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&cur)close()});
+
+  function init(name){
+    q('.lang button').forEach(function(b){b.onclick=function(){q('.lang button').forEach(function(x){x.classList.toggle('on',x===b)});if(b.textContent==='English')say('English version coming soon')}});
+    q('.tabs').forEach(function(t){[].forEach.call(t.querySelectorAll('button'),function(b){b.onclick=function(){[].forEach.call(t.querySelectorAll('button'),function(x){x.classList.toggle('on',x===b)})}})});
+    q('.acc button').forEach(function(b){b.onclick=function(){var a=b.parentElement;a.classList.toggle('on');b.querySelector('i').textContent=a.classList.contains('on')?'−':'+'}});
+    if(name==='OVO Premier'){var mb=root.querySelector('.sheet .btn');if(mb)mb.onclick=function(){say('Verifikasi data segera hadir')}}
+    if(name==='Pusat Bantuan')helpInit();
+    if(name==='Ubah Security Code')pinInit();
+  }
+  function helpInit(){
+    var menu=g('menu');
+    var items=[['⚙','Akun dan Pengaturan'],['↑','Transfer'],['Rp','Pembayaran'],['＋','Top Up dan Tagihan'],['◎','Upgrade ke Premier'],['🏷','Merchant OVO & Deals'],['i','Fitur Unggulan OVO'],['📈','OVO | Invest by Bareksa'],['🐷','OVO Nabung'],['i','Gebuk Judol']];
+    function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+    function d(s){
+      s=(s||'').toLowerCase();
+      var l=items.filter(function(x){return x[1].toLowerCase().indexOf(s)>-1});
+      menu.innerHTML=l.length?l.map(function(x,i){return '<button class="row" data-t="'+esc(x[1])+'"><div class="ic">'+x[0]+'</div><span class="t">'+esc(x[1])+'</span><b>›</b></button>'}).join(''):'<p style="text-align:center;color:#888;padding:28px 0">Tidak ada hasil untuk “'+esc(s)+'”</p>';
+    }
+    d();
+    g('cari').oninput=function(e){d(e.target.value)};
+    menu.onclick=function(e){
+      var r=e.target.closest('.row');if(!r)return;
+      var t=r.getAttribute('data-t');
+      if(t==='Upgrade ke Premier')open('OVO Premier');
+      else if(t==='Akun dan Pengaturan')close();
+      else say(t);
+    };
+  }
+  function pinInit(){
+    var pe=g('pin'),ks=g('keys'),title=g('pin-t'),desc=g('pin-d');
+    var step=0,pin='',first='',lock=false;
+    var T=[['Masukkan Security Code Anda saat ini','Security Code digunakan untuk masuk ke akun Anda dan bertransaksi'],
+           ['Masukkan Security Code baru','Gunakan 6 angka yang mudah kamu ingat'],
+           ['Masukkan ulang Security Code baru','Pastikan sama dengan Security Code baru yang kamu buat']];
+    function draw(){pe.innerHTML='';for(var i=0;i<6;i++){var s=document.createElement('span');s.textContent=pin[i]?'•':'';if(pin[i])s.className='f';else if(i===pin.length)s.className='cur';pe.appendChild(s)}}
+    function setStep(n){step=n;pin='';title.textContent=T[n][0];desc.textContent=T[n][1];draw()}
+    function wrong(msg){lock=true;pe.classList.add('sh');say(msg);setTimeout(function(){pe.classList.remove('sh');pin='';draw();lock=false},450)}
+    function submit(){
+      if(lock||pin.length<6)return;
+      if(step===0){if(pin===PIN_OK)setStep(1);else wrong('Security Code salah, coba lagi')}
+      else if(step===1){if(pin===PIN_OK)wrong('Security Code baru tidak boleh sama dengan yang lama');else{first=pin;setStep(2)}}
+      else{if(pin===first){say('Security Code berhasil diubah');lock=true;setTimeout(close,900)}else{first='';wrong('Security Code tidak cocok, ulangi dari awal');setTimeout(function(){setStep(1)},460)}}
+    }
+    function key(k){
+      if(lock)return;
+      if(k==='⌫')pin=pin.slice(0,-1);else if(k==='Selesai'){submit();return}else if(pin.length<6)pin+=k;
+      draw();if(pin.length===6)setTimeout(submit,140);
+    }
+    [['1',''],['2','ABC'],['3','DEF'],['4','GHI'],['5','JKL'],['6','MNO'],['7','PQRS'],['8','TUV'],['9','WXYZ'],['⌫',''],['0',''],['Selesai','']].forEach(function(a){
+      var b=document.createElement('button');b.innerHTML=a[0]+(a[1]?'<small>'+a[1]+'</small>':'');if(a[0]==='Selesai')b.style.color='#4a9bff';
+      b.onclick=function(){key(a[0])};ks.appendChild(b)});
+    draw();
+  }
+
+  /* ---- sambungkan baris menu tab Profile ---- */
+  var pb=document.getElementById('pbody');
+  if(pb)pb.addEventListener('click',function(e){
+    var r=e.target.closest('.row');if(!r||r.dataset.act!=='menu')return;
+    if(open(r.dataset.l))e.stopPropagation();
+  });
 })();
 </script>
 </body>

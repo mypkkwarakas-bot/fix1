@@ -727,6 +727,22 @@ html.lg-lock body > :not(#lg){visibility:hidden}
 #tf .tf-toast{position:absolute;left:2.4rem;right:2.4rem;bottom:9rem;background:#323232;color:#fff;padding:1.2rem 1.6rem;border-radius:.6rem;font-size:1.3rem;text-align:center;opacity:0;pointer-events:none;transition:opacity .25s;z-index:5}
 #tf .tf-toast.show{opacity:1}
 </style>
+<style>
+/* ===== In-app notification: top-up berhasil ===== */
+#ovo-inapp-notif{--ovon-u:calc(min(100vw,480px)/360);position:fixed;top:calc(var(--ovon-u)*34 + env(safe-area-inset-top,0px));left:50%;width:calc(100% - var(--ovon-u)*16);max-width:calc(var(--ovon-u)*688);height:calc(var(--ovon-u)*105.5);min-height:calc(var(--ovon-u)*105.5);z-index:200;display:flex;align-items:center;gap:16px;padding:16px 18px 16px 24px;border:1px solid #c8cbd1;border-radius:calc(var(--ovon-u)*12.5);background:linear-gradient(145deg,#f0f2f5 0%,#e2e8f1 100%);box-shadow:0 5px 18px rgba(20,25,40,.16);color:#171717;font-family:Arial,Helvetica,sans-serif;opacity:0;visibility:hidden;transform:translate(-50%,-135%);transition:transform .38s cubic-bezier(.2,.8,.2,1),opacity .28s,visibility 0s .4s;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+#ovo-inapp-notif.on{opacity:1;visibility:visible;transform:translate(-50%,0);transition:transform .38s cubic-bezier(.2,.8,.2,1),opacity .28s,visibility 0s}
+#ovo-inapp-notif .ovon-left{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:#6428d7;color:#fff;font-size:10px;font-weight:800;letter-spacing:-.4px}
+#ovo-inapp-notif .ovon-copy{flex:1;min-width:0}
+#ovo-inapp-notif .ovon-brand{font-size:22px;line-height:26px;font-weight:400;margin-bottom:14px}
+#ovo-inapp-notif .ovon-title{font-size:18px;line-height:24px;font-weight:400;color:#222}
+#ovo-inapp-notif .ovon-title span{color:#555;margin:0 3px}
+#ovo-inapp-notif .ovon-message{font-size:17px;line-height:23px;color:#6b6d72;font-weight:400;overflow-wrap:anywhere}
+#ovo-inapp-notif .ovon-mark{flex:none;width:52px;height:52px;margin-left:4px}
+#ovo-inapp-notif.swiping{transition:none}
+@media(max-width:390px){#ovo-inapp-notif{gap:11px;padding:13px 14px 13px 16px;height:calc(var(--ovon-u)*105.5);min-height:calc(var(--ovon-u)*105.5);border-radius:calc(var(--ovon-u)*12.5)}#ovo-inapp-notif .ovon-left{width:40px;height:40px}#ovo-inapp-notif .ovon-brand{font-size:20px;margin-bottom:10px}#ovo-inapp-notif .ovon-title{font-size:16px;line-height:21px}#ovo-inapp-notif .ovon-message{font-size:15px;line-height:20px}#ovo-inapp-notif .ovon-mark{width:43px;height:43px}}
+@media(prefers-reduced-motion:reduce){#ovo-inapp-notif{transition:none}}
+
+</style>
 </head>
 <body>
 <div id="lg">
@@ -1131,6 +1147,7 @@ html.lg-lock body > :not(#lg){visibility:hidden}
   </div>
  </div>
  <div class="toast" id="toast"></div>
+<div id="ovo-inapp-notif" role="status" aria-live="polite" aria-atomic="true" aria-hidden="true"><div class="ovon-left" aria-hidden="true">OVO</div><div class="ovon-copy"><div class="ovon-brand">ovo</div><div class="ovon-title">OVO <span>•</span> Sekarang</div><div class="ovon-message" id="ovo-inapp-message"></div></div><svg class="ovon-mark" viewBox="0 0 56 56" aria-hidden="true"><circle cx="28" cy="28" r="25" fill="#49218e"/><circle cx="28" cy="28" r="15.5" fill="none" stroke="#fff" stroke-width="6"/></svg></div>
  <div id="sub" aria-hidden="true"></div>
 </div>
 
@@ -2341,6 +2358,24 @@ if(location.hash==='#history')openHist(true);
     var r=e.target.closest('.row');if(!r||r.dataset.act!=='menu')return;
     if(open(r.dataset.l))e.stopPropagation();
   });
+})();
+</script>
+<script>
+/* ===== Deteksi top-up baru dan tampilkan notifikasi saat aplikasi terbuka ===== */
+(function(){'use strict';
+ var URL='https://jtdnsrsollmknfijdqty.supabase.co',KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp0ZG5zcnNvbGxta25maWpkcXR5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0OTIxMDAsImV4cCI6MjEwODA2ODEwMH0.snpF-wdt0XhwodmfQuW7J-uaG9GV-Q0fDJVoxJImcNE';
+ var el=document.getElementById('ovo-inapp-notif'),msg=document.getElementById('ovo-inapp-message');if(!el||!msg)return;
+ var known=null,busy=false,hideTimer=null,dragX=0,dragY=0,activePointer=null;
+ function rupiah(n){return 'Rp'+String(Math.round(Number(n)||0)).replace(/\B(?=(\d{3})+(?!\d))/g,'.')}
+ function dismiss(){clearTimeout(hideTimer);el.classList.remove('on','swiping');el.style.transform='';el.setAttribute('aria-hidden','true')}
+ function show(r){var total=(Number(r.nominal)||0)+(Number(r.biaya)||0);msg.textContent='Top up sebesar '+rupiah(total)+' melalui '+(r.bank||'bank')+', telah berhasil';clearTimeout(hideTimer);el.classList.remove('swiping');el.style.transform='';el.setAttribute('aria-hidden','false');requestAnimationFrame(function(){el.classList.add('on')});hideTimer=setTimeout(dismiss,5000)}
+ function signature(r){return String(r.kode||'')+'|'+String(r.waktu||'')+'|'+String(r.nominal||'')+'|'+String(r.bank||'')}
+ function poll(){if(busy||document.hidden)return;busy=true;fetch(URL+'/rest/v1/rpc/ox_riwayat',{method:'POST',headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json'},body:JSON.stringify({p_limit:100}),cache:'no-store'}).then(function(res){if(!res.ok)throw new Error('request failed');return res.json()}).then(function(rows){if(!Array.isArray(rows))return;var current={};rows.forEach(function(r){if(r.jenis!=='transfer_masuk')current[signature(r)]=r});if(known!==null){var fresh=rows.filter(function(r){return r.jenis!=='transfer_masuk'&&!known[signature(r)]});if(fresh.length){fresh.sort(function(a,b){return new Date(b.waktu||0)-new Date(a.waktu||0)});show(fresh[0])}}known=current}).catch(function(){}).then(function(){busy=false})}
+ poll();setInterval(poll,5000);document.addEventListener('visibilitychange',function(){if(!document.hidden)poll()});el.addEventListener('click',dismiss);
+ el.addEventListener('pointerdown',function(e){activePointer=e.pointerId;dragX=e.clientX;dragY=e.clientY;el.classList.add('swiping');try{el.setPointerCapture(e.pointerId)}catch(_){}});
+ el.addEventListener('pointermove',function(e){if(activePointer!==e.pointerId)return;var dx=e.clientX-dragX,dy=e.clientY-dragY;if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>5)el.style.transform='translate(calc(-50% + '+dx+'px), '+Math.min(0,dy)+'px)';else if(dy<0)el.style.transform='translate(-50%,'+dy+'px)'});
+ function end(e){if(activePointer!==e.pointerId)return;var dx=e.clientX-dragX,dy=e.clientY-dragY;activePointer=null;if(Math.abs(dx)>65||dy<-45)dismiss();else{el.classList.remove('swiping');el.style.transform=''}}
+ el.addEventListener('pointerup',end);el.addEventListener('pointercancel',function(e){if(activePointer===e.pointerId){activePointer=null;el.classList.remove('swiping');el.style.transform=''}});
 })();
 </script>
 </body>

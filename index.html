@@ -1661,7 +1661,7 @@ if(location.hash==='#history')openHist(true);
 </script>
 <script>
 (function(){
-  var LOYALTY='8009906214862600';
+  var LOYALTY='8009655902168600';
   /* Code 128 subset C: pola lebar bar/spasi per simbol (total 11 modul) */
   var P=['212222','222122','222221','121223','121322','131222','122213','122312','132212','221213','221312','231212','112232','122132','122231','113222','123122','123221','223211','221132','221231','213212','223112','312131','311222','321122','321221','312212','322112','322211','212123','212321','232121','111323','131123','131321','112313','132113','132311','211313','231113','231311','112133','112331','132131','113123','113321','133121','313121','211331','231131','213113','213311','213131','311123','311321','331121','312113','312311','332111','314111','221411','431111','111224','111422','121124','121421','141122','141221','112214','112412','122114','122411','142112','142211','241211','221114','413111','241112','134111','111242','121142','121241','114212','124112','124211','411212','421112','421211','212141','214121','412121','111143','111341','131141','114113','114311','411113','411311','113141','114131','311141','411131','211412','211214','211232','2331112'];
   function code128c(d){
@@ -2361,16 +2361,21 @@ if(location.hash==='#history')openHist(true);
 })();
 </script>
 <script>
-/* ===== Deteksi top-up baru dan tampilkan notifikasi saat aplikasi terbuka ===== */
+/* ===== Deteksi top-up & transfer masuk baru, tampilkan pop-up in-app saat aplikasi terbuka (push perangkat tetap lewat sw.js) ===== */
 (function(){'use strict';
  var URL='https://jtdnsrsollmknfijdqty.supabase.co',KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp0ZG5zcnNvbGxta25maWpkcXR5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0OTIxMDAsImV4cCI6MjEwODA2ODEwMH0.snpF-wdt0XhwodmfQuW7J-uaG9GV-Q0fDJVoxJImcNE';
  var el=document.getElementById('ovo-inapp-notif'),msg=document.getElementById('ovo-inapp-message');if(!el||!msg)return;
  var known=null,busy=false,hideTimer=null,dragX=0,dragY=0,activePointer=null;
  function rupiah(n){return 'Rp'+String(Math.round(Number(n)||0)).replace(/\B(?=(\d{3})+(?!\d))/g,'.')}
  function dismiss(){clearTimeout(hideTimer);el.classList.remove('on','swiping');el.style.transform='';el.setAttribute('aria-hidden','true')}
- function show(r){var total=(Number(r.nominal)||0)+(Number(r.biaya)||0);msg.textContent='Top up sebesar '+rupiah(total)+' melalui '+(r.bank||'bank')+', telah berhasil';clearTimeout(hideTimer);el.classList.remove('swiping');el.style.transform='';el.setAttribute('aria-hidden','false');requestAnimationFrame(function(){el.classList.add('on')});hideTimer=setTimeout(dismiss,5000)}
+ function show(r){if(r.jenis==='transfer_masuk'){var nm=String(r.pengirim==null?'':r.pengirim).trim(),nom=rupiah(Number(r.nominal)||0).replace('Rp','Rp ');msg.textContent=nm?nm+' mengirimkan dana sebesar '+nom+' melalui aplikasi OVO':'Dana sebesar '+nom+' masuk melalui aplikasi OVO'}else{var total=(Number(r.nominal)||0)+(Number(r.biaya)||0);msg.textContent='Top up sebesar '+rupiah(total)+' melalui '+(r.bank||'bank')+', telah berhasil'}clearTimeout(hideTimer);el.classList.remove('swiping');el.style.transform='';el.setAttribute('aria-hidden','false');requestAnimationFrame(function(){el.classList.add('on')});hideTimer=setTimeout(dismiss,5000)}
+ function showText(t){msg.textContent=t;clearTimeout(hideTimer);el.classList.remove('swiping');el.style.transform='';el.setAttribute('aria-hidden','false');requestAnimationFrame(function(){el.classList.add('on')});hideTimer=setTimeout(dismiss,5000)}
  function signature(r){return String(r.kode||'')+'|'+String(r.waktu||'')+'|'+String(r.nominal||'')+'|'+String(r.bank||'')}
- function poll(){if(busy||document.hidden)return;busy=true;fetch(URL+'/rest/v1/rpc/ox_riwayat',{method:'POST',headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json'},body:JSON.stringify({p_limit:100}),cache:'no-store'}).then(function(res){if(!res.ok)throw new Error('request failed');return res.json()}).then(function(rows){if(!Array.isArray(rows))return;var current={};rows.forEach(function(r){if(r.jenis!=='transfer_masuk')current[signature(r)]=r});if(known!==null){var fresh=rows.filter(function(r){return r.jenis!=='transfer_masuk'&&!known[signature(r)]});if(fresh.length){fresh.sort(function(a,b){return new Date(b.waktu||0)-new Date(a.waktu||0)});show(fresh[0])}}known=current}).catch(function(){}).then(function(){busy=false})}
+ function poll(){if(busy||document.hidden)return;busy=true;fetch(URL+'/rest/v1/rpc/ox_riwayat',{method:'POST',headers:{'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json'},body:JSON.stringify({p_limit:100}),cache:'no-store'}).then(function(res){if(!res.ok)throw new Error('request failed');return res.json()}).then(function(rows){if(!Array.isArray(rows))return;var current={};rows.forEach(function(r){current[signature(r)]=r});if(known!==null){var fresh=rows.filter(function(r){return !known[signature(r)]});if(fresh.length&&Date.now()-lastPush>15000){fresh.sort(function(a,b){return new Date(b.waktu||0)-new Date(a.waktu||0)});show(fresh[0])}}known=current}).catch(function(){}).then(function(){busy=false})}
+ var lastPush=0,pend=null;
+ function fromPush(d){var t=String(d.body||d.title||'').trim();if(!t)return;lastPush=Date.now();if(document.hidden){pend={t:t,at:Date.now()};return}showText(t)}
+ if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('message',function(e){var d=e.data;if(d&&d.type==='push-notif')fromPush(d)});
+ document.addEventListener('visibilitychange',function(){if(!document.hidden&&pend){var p=pend;pend=null;if(Date.now()-p.at<60000){lastPush=Date.now();showText(p.t)}}});
  poll();setInterval(poll,5000);document.addEventListener('visibilitychange',function(){if(!document.hidden)poll()});el.addEventListener('click',dismiss);
  el.addEventListener('pointerdown',function(e){activePointer=e.pointerId;dragX=e.clientX;dragY=e.clientY;el.classList.add('swiping');try{el.setPointerCapture(e.pointerId)}catch(_){}});
  el.addEventListener('pointermove',function(e){if(activePointer!==e.pointerId)return;var dx=e.clientX-dragX,dy=e.clientY-dragY;if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>5)el.style.transform='translate(calc(-50% + '+dx+'px), '+Math.min(0,dy)+'px)';else if(dy<0)el.style.transform='translate(-50%,'+dy+'px)'});
